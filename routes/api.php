@@ -30,9 +30,9 @@ Route::middleware(['auth:admin'])->post('/broadcasting/auth', function (Request 
 
 // WhatsApp Webhook Routes (no authentication needed for WhatsApp webhooks)
 Route::prefix('webhook')->group(function () {
-    Route::get('/whatsapp', [WebhookController::class, 'verify']);
-    Route::post('/whatsapp', [WebhookController::class, 'handle']);
-    Route::post('/whatsapp/test', [WebhookController::class, 'test']);
+    Route::get('/whatsapp', [App\Http\Controllers\Api\WhatsappWebhookController::class, 'handle']);
+    Route::post('/whatsapp', [App\Http\Controllers\Api\WhatsappWebhookController::class, 'handle']);
+    Route::post('/whatsapp/test', [App\Http\Controllers\Api\WhatsappWebhookController::class, 'handle']);
 });
 
 // Workflow Management Routes (Admin only)

@@ -188,28 +188,46 @@ class WhatsappConversationController extends Controller
             return $this->getMessageUpdates($request, $whatsappNumber);
         }
         
-        // Get conversation history for this phone number
-        $messages = WhatsappConversation::where('phone', $whatsappNumber)
-            ->orderBy('created_at', 'asc')
-            ->paginate(50);
+        // Try to find conversations with both formats (with and without +)
+        $messages = WhatsappConversation::where(function($query) use ($whatsappNumber) {
+            $query->where('phone', $whatsappNumber);
+            
+            // Also search for variations of the phone number
+            if (strpos($whatsappNumber, '+') === 0) {
+                // If has +, also search without +
+                $query->orWhere('phone', substr($whatsappNumber, 1));
+            } else {
+                // If no +, also search with +
+                $query->orWhere('phone', '+' . $whatsappNumber);
+            }
+        })->orderBy('created_at', 'asc')->paginate(50);
 
         // Get active workflow if exists
         $activeWorkflow = Workflow::where('whatsapp_number', $whatsappNumber)
             ->where('status', 'running')
             ->first();
 
-        // Get conversation statistics
+        // Get conversation statistics (handle phone number variations)
+        $phoneQuery = function($query) use ($whatsappNumber) {
+            $query->where('phone', $whatsappNumber);
+            if (strpos($whatsappNumber, '+') === 0) {
+                $query->orWhere('phone', substr($whatsappNumber, 1));
+            } else {
+                $query->orWhere('phone', '+' . $whatsappNumber);
+            }
+        };
+        
         $stats = [
-            'total_messages' => WhatsappConversation::where('phone', $whatsappNumber)->count(),
-            'replied_messages' => WhatsappConversation::where('phone', $whatsappNumber)
+            'total_messages' => WhatsappConversation::where($phoneQuery)->count(),
+            'replied_messages' => WhatsappConversation::where($phoneQuery)
                 ->where('is_responded', 1)->count(),
-            'pending_messages' => WhatsappConversation::where('phone', $whatsappNumber)
+            'pending_messages' => WhatsappConversation::where($phoneQuery)
                 ->where('is_responded', 0)->count(),
-            'lead_status' => WhatsappConversation::where('phone', $whatsappNumber)
+            'lead_status' => WhatsappConversation::where($phoneQuery)
                 ->orderBy('created_at', 'desc')->first()?->lead_status ?? 'new',
-            'first_message' => WhatsappConversation::where('phone', $whatsappNumber)
+            'first_message' => WhatsappConversation::where($phoneQuery)
                 ->orderBy('created_at', 'asc')->first()?->created_at,
-            'last_message' => WhatsappConversation::where('phone', $whatsappNumber)
+            'last_message' => WhatsappConversation::where($phoneQuery)
                 ->orderBy('created_at', 'desc')->first()?->created_at,
         ];
 

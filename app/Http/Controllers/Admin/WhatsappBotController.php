@@ -16,7 +16,7 @@ use App\Models\WhatsappDefaultResponse;
 use App\Models\WhatsappChatGPTContext;
 use App\Models\WhatsappMedia;
 use App\Events\WhatsappImageReceived;
-use App\Services\WhatsAppCloudApiService;
+use App\Services\WhatsappCloudApiService;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;

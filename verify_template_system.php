@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\Services\WhatsAppCloudApiService;
+use App\Services\WhatsappCloudApiService;
 use App\Models\WhatsappTemplate;
 
 // Bootstrap Laravel

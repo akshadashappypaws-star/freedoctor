@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Models\WhatsappTemplate;
 use App\Models\WhatsappConversation;
-use App\Services\WhatsAppCloudApiService;
+use App\Services\WhatsappCloudApiService;
 use Illuminate\Support\Facades\Cache;
 
 class WhatsAppStatusMiddleware
