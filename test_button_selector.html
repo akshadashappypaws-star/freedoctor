@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Selector Test</title>
+</head>
+<body>
+    <form id="bulkMessageForm">
+        <button type="submit" id="submitBulkMessageBtn">
+            <span class="submit-text">Send Message</span>
+            <span class="submit-loading hidden">Loading...</span>
+        </button>
+    </form>
+
+    <script>
+        function testSelectors() {
+            console.log('Testing button selectors...');
+            
+            const method1 = document.getElementById('submitBulkMessageBtn');
+            console.log('Method 1 (getElementById):', method1);
+            
+            const method2 = document.querySelector('#bulkMessageForm button[type="submit"]');
+            console.log('Method 2 (querySelector form button):', method2);
+            
+            const form = document.getElementById('bulkMessageForm');
+            const method3 = form ? form.querySelector('button[type="submit"]') : null;
+            console.log('Method 3 (form.querySelector):', method3);
+            
+            if (method1 || method2 || method3) {
+                console.log('✅ Button found with at least one method');
+            } else {
+                console.log('❌ Button not found with any method');
+            }
+        }
+
+        // Test when page loads
+        document.addEventListener('DOMContentLoaded', testSelectors);
+        
+        // Test immediately
+        testSelectors();
+    </script>
+</body>
+</html>

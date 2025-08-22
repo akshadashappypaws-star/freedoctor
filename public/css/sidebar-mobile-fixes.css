@@ -1,0 +1,260 @@
+/* ===== USER SIDEBAR FIXES & MOBILE RESPONSIVE ENHANCEMENTS ===== */
+
+/* Fix z-index hierarchy for proper layering - Sidebar BELOW header */
+.header-sticky {
+    z-index: 1100 !important; /* Above sidebar */
+    height: 70px !important; /* Define header height */
+}
+
+.sidebar {
+    z-index: 1050 !important; /* Below header */
+    background: #383F45 !important; /* Updated sidebar color */
+    top: 70px !important; /* Start below header */
+    height: calc(100vh - 70px) !important; /* Subtract header height */
+    padding-top: 1rem !important; /* Add top padding as requested */
+}
+
+.sidebar-overlay {
+    z-index: 1049 !important; /* Just below sidebar */
+    top: 70px !important; /* Start below header */
+    height: calc(100vh - 70px) !important; /* Subtract header height */
+}
+
+/* Updated color scheme for sidebar elements */
+.mobile-menu-btn {
+    background: #383F45 !important;
+    color: white !important;
+}
+
+.mobile-menu-btn:hover {
+    background: #E7A51B !important;
+    color: #000 !important;
+}
+
+.nav-item:hover {
+    background: rgba(231, 165, 27, 0.1) !important;
+}
+
+.nav-item.active {
+    background: rgba(231, 165, 27, 0.2) !important;
+    border-right: 3px solid #E7A51B !important;
+}
+
+.nav-item.active::before {
+    background: #E7A51B !important;
+}
+
+.nav-item:hover .nav-icon {
+    background: rgba(231, 165, 27, 0.2) !important;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+    /* Ensure mobile menu button is always visible on mobile */
+    .mobile-menu-btn {
+        display: flex !important;
+        position: relative;
+        z-index: 1101;
+    }
+    
+    /* Header consistent height */
+    .header-container {
+        height: 70px !important;
+        padding: 1rem !important;
+    }
+    
+    /* Full-width sidebar on mobile - positioned below header */
+    .sidebar {
+        width: 100% !important;
+        max-width: 320px !important;
+        top: 70px !important;
+        height: calc(100vh - 70px) !important;
+        padding-top: 1.5rem !important; /* Extra padding on mobile */
+    }
+    
+    /* Overlay positioned below header */
+    .sidebar-overlay.active {
+        display: block !important;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        top: 70px !important;
+        height: calc(100vh - 70px) !important;
+    }
+    
+    /* Better touch targets */
+    .nav-item {
+        padding: 1rem 1.5rem !important;
+        font-size: 1rem !important;
+        min-height: 56px !important; /* Minimum touch target size */
+    }
+    
+    .nav-icon {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.2rem !important;
+    }
+    
+    /* Prevent body scroll when sidebar is open */
+    body.sidebar-open {
+        overflow: hidden !important;
+    }
+    
+    /* Add spacing below header for main content */
+    .main-content {
+        margin-left: 0 !important;
+        padding-top: 1rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Smaller screens get slightly more compact sidebar */
+    .sidebar {
+        max-width: 280px !important;
+        top: 70px !important;
+        height: calc(100vh - 70px) !important;
+        padding-top: 1.25rem !important;
+    }
+    
+    .header-container {
+        height: 70px !important;
+        padding: 0.75rem 1rem !important;
+    }
+    
+    .nav-item {
+        padding: 0.875rem 1.25rem !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .nav-icon {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 1.1rem !important;
+    }
+    
+    /* Compact section titles */
+    .nav-section-title {
+        font-size: 0.65rem !important;
+        padding: 0 1.25rem !important;
+    }
+}
+
+/* ===== SIDEBAR STRUCTURE SIMPLIFICATION ===== */
+/* Remove problematic navigation items and keep only essential ones */
+.sidebar .nav-section.user-actions {
+    display: none !important; /* Hide edit profile, notifications etc. as requested */
+}
+
+/* Hide specific navigation items by their content */
+.nav-item:has(.fa-edit),
+.nav-item:has(.fa-bell),
+.nav-item:has(.fa-users),
+.nav-item:has(.fa-share-alt),
+.nav-item:has(.fa-dollar-sign) {
+    display: none !important;
+}
+
+/* Alternative method using text content (fallback) */
+.nav-item[data-nav="edit-profile"],
+.nav-item[data-nav="notifications"],
+.nav-item[data-nav="registrations"],
+.nav-item[data-nav="referrals"],
+.nav-item[data-nav="earnings"] {
+    display: none !important;
+}
+
+/* Keep only essential navigation items */
+.sidebar .nav-section.main-nav {
+    display: block !important;
+}
+
+/* Enhanced accessibility for mobile */
+@media (max-width: 768px) {
+    /* Focus styles for keyboard navigation */
+    .nav-item:focus {
+        outline: 2px solid #E7A51B !important;
+        outline-offset: 2px !important;
+    }
+    
+    /* Better visual feedback for touch */
+    .nav-item:active {
+        transform: scale(0.98) !important;
+        background: rgba(231, 165, 27, 0.15) !important;
+    }
+}
+
+/* ===== ANIMATION IMPROVEMENTS ===== */
+/* Smoother sidebar transitions */
+.sidebar {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.sidebar-overlay {
+    transition: opacity 0.3s ease !important;
+}
+
+.sidebar-overlay.active {
+    opacity: 1 !important;
+}
+
+/* Stagger animation for nav items */
+.nav-item {
+    transition: all 0.2s ease !important;
+}
+
+.nav-item:nth-child(1) { animation-delay: 0.05s; }
+.nav-item:nth-child(2) { animation-delay: 0.1s; }
+.nav-item:nth-child(3) { animation-delay: 0.15s; }
+.nav-item:nth-child(4) { animation-delay: 0.2s; }
+.nav-item:nth-child(5) { animation-delay: 0.25s; }
+
+/* ===== UTILITY CLASSES FOR MOBILE ===== */
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block !important;
+    }
+    
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+/* ===== FINAL COLOR CORRECTIONS ===== */
+/* Ensure all buttons use the new color scheme */
+.btn-primary {
+    background: #383F45 !important;
+    border-color: #383F45 !important;
+}
+
+.btn-primary:hover {
+    background: #2a2f34 !important;
+    border-color: #2a2f34 !important;
+}
+
+.btn-secondary {
+    background: #E7A51B !important;
+    border-color: #E7A51B !important;
+    color: #000 !important;
+}
+
+.btn-secondary:hover {
+    background: #d4941a !important;
+    border-color: #d4941a !important;
+    color: #000 !important;
+}
+
+/* Success message for accessibility */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}

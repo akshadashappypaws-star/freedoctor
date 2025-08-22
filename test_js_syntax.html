@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Syntax Test</title>
+</head>
+<body>
+    <div id="test">Testing JavaScript</div>
+    
+    <script>
+        // Test basic JavaScript syntax
+        let userLatitude = null;
+        let userLongitude = null;
+        let isUserLoggedIn = true;
+        let searchTimeout = null;
+        let googleMapsLoaded = false;
+        
+        function debugLog(message, data = null) {
+            console.log(`[Campaign Search] ${message}`, data || '');
+        }
+        
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        }
+        
+        function handleGoogleMapsLoad() {
+            debugLog('Google Maps loaded successfully');
+            googleMapsLoaded = true;
+        }
+        
+        function handleGoogleMapsError() {
+            console.error('Google Maps failed to load');
+            googleMapsLoaded = false;
+        }
+        
+        // Test the code
+        debugLog('JavaScript syntax test passed');
+        document.getElementById('test').innerHTML = 'JavaScript loaded successfully!';
+    </script>
+</body>
+</html>

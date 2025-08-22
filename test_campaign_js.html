@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Campaign Search Debug</title>
+    <meta name="csrf-token" content="test-token">
+</head>
+<body>
+    <h1>Campaign Search JavaScript Debug</h1>
+    <div id="test-output"></div>
+    
+    <script>
+        let userLatitude = null;
+        let userLongitude = null;
+        let isUserLoggedIn = true;
+        let searchTimeout = null;
+        let googleMapsLoaded = false;
+        let allCampaignsData = [];
+        let originalCampaignsHtml = '';
+        let lastSearchQuery = '';
+
+        function debugLog(message, data = null) {
+            console.log(`[Campaign Search] ${message}`, data || '');
+            document.getElementById('test-output').innerHTML += '<p>' + message + '</p>';
+        }
+
+        function successLog(message, data = null) {
+            console.log(`[SUCCESS] ${message}`, data || '');
+        }
+
+        function errorLog(message, error = null) {
+            console.error(`[ERROR] ${message}`, error || '');
+        }
+
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        }
+
+        // ===== GOOGLE MAPS INTEGRATION =====
+        window.handleGoogleMapsLoad = function() {
+            debugLog('Google Maps loaded successfully');
+            googleMapsLoaded = true;
+            
+            // Initialize Places Autocomplete for location search
+            if (window.initializePlacesAutocomplete) {
+                initializePlacesAutocomplete();
+            }
+        }
+
+        window.handleGoogleMapsError = function() {
+            errorLog('Google Maps failed to load');
+            googleMapsLoaded = false;
+        }
+
+        function initializePlacesAutocomplete() {
+            debugLog('initializePlacesAutocomplete called');
+            return true;
+        }
+
+        function performLocationBasedSearch(searchQuery = '', locationQuery = '') {
+            debugLog('performLocationBasedSearch called', {searchQuery, locationQuery});
+            return true;
+        }
+
+        function createCampaignCardHtml(campaign) {
+            return `<div>Campaign: ${campaign.title}</div>`;
+        }
+
+        function getCurrentLocationText() {
+            const locationInput = document.getElementById('locationSearchInput');
+            return locationInput ? locationInput.value.trim() : '';
+        }
+
+        // Test the functions
+        debugLog('Starting JavaScript test...');
+        debugLog('getCSRFToken: ' + getCSRFToken());
+        debugLog('performLocationBasedSearch test: ' + performLocationBasedSearch('test', 'test location'));
+        debugLog('createCampaignCardHtml test: ' + createCampaignCardHtml({title: 'Test Campaign'}));
+        debugLog('getCurrentLocationText test: ' + getCurrentLocationText());
+        debugLog('All tests completed successfully!');
+    </script>
+    
+    <!-- Test Google Maps loading -->
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=DEFAULT_KEY&libraries=places&callback=handleGoogleMapsLoad&loading=async"
+        onerror="handleGoogleMapsError()">
+    </script>
+</body>
+</html>

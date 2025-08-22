@@ -1,0 +1,115 @@
+/* Back Arrow Button Styles */
+.back-arrow-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+}
+
+.back-arrow-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    min-width: 120px;
+    justify-content: center;
+}
+
+.back-arrow-btn:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
+    color: #333 !important;
+    text-decoration: none;
+    border-color: rgba(90, 77, 232, 0.3);
+}
+
+.back-arrow-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.back-arrow-btn svg {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+    stroke-width: 2.5px;
+}
+
+.back-arrow-btn:hover svg {
+    transform: translateX(-3px);
+    color: #5a4de8;
+}
+
+/* Enhanced visibility for app launch */
+.back-arrow-btn::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: rgba(90, 77, 232, 0.1);
+    border-radius: 50px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.back-arrow-btn:hover::before {
+    opacity: 1;
+}
+
+/* Mobile and tablet responsive design */
+@media (max-width: 768px) {
+    .back-arrow-container {
+        top: 15px;
+        left: 15px;
+    }
+    
+    .back-arrow-btn {
+        padding: 10px 15px;
+        font-size: 13px;
+        min-width: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-arrow-container {
+        top: 10px;
+        left: 10px;
+    }
+    
+    .back-arrow-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+    
+    .back-arrow-btn svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+    }
+}
+
+/* High contrast mode for better visibility */
+@media (prefers-contrast: high) {
+    .back-arrow-btn {
+        background: rgba(255, 255, 255, 1);
+        border: 3px solid #333;
+        color: #000;
+    }
+    
+    .back-arrow-btn:hover {
+        background: #f0f0f0 !important;
+        border-color: #5a4de8;
+    }
+}

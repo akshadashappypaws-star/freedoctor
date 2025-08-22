@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps Modern Loading Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        #locationInput { width: 300px; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .pac-container { z-index: 10000 !important; }
+    </style>
+</head>
+<body>
+    <h1>Google Maps Modern Loading & Autocomplete Test</h1>
+    
+    <div class="test-section">
+        <h3>Location Input with Autocomplete</h3>
+        <input type="text" id="locationInput" placeholder="Enter a location..." autocomplete="off">
+        <div id="status">Loading Google Maps...</div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Debug Information</h3>
+        <div id="debug"></div>
+    </div>
+
+    <script>
+        let googleMapsLoaded = false;
+        
+        function debugLog(message) {
+            console.log(message);
+            document.getElementById('debug').innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+        }
+        
+        function updateStatus(message, success = false) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = message;
+            statusDiv.className = success ? 'success' : 'error';
+        }
+
+        // Modern Google Maps API loading pattern
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.googleapis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=this.nonce||this.getAttribute("nonce")||"";m.head.appendChild(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+            ({key:"AIzaSyBUMcqRhjHNWfj1fh5todf9GV1J9S2QDyc", v:"weekly"});
+
+        // Initialize Google Maps when ready
+        async function initGoogleMaps() {
+            try {
+                debugLog('Attempting to load Google Maps Places library...');
+                
+                // Load the Places library
+                const { PlacesService } = await google.maps.importLibrary("places");
+                debugLog('Google Maps Places library loaded successfully');
+                googleMapsLoaded = true;
+                
+                // Initialize Places Autocomplete
+                initializePlacesAutocomplete();
+                updateStatus('Google Maps loaded successfully!', true);
+            } catch (error) {
+                debugLog('Failed to load Google Maps Places library: ' + error.message);
+                googleMapsLoaded = false;
+                updateStatus('Failed to load Google Maps: ' + error.message);
+            }
+        }
+
+        function initializePlacesAutocomplete() {
+            debugLog('Attempting to initialize Places Autocomplete');
+            
+            const locationInput = document.getElementById('locationInput');
+            if (!locationInput) {
+                debugLog('Location input element not found');
+                return;
+            }
+            
+            // Check if Google Maps and Places are available
+            if (!window.google || !window.google.maps || !window.google.maps.places) {
+                debugLog('Google Maps Places API not ready, retrying in 500ms');
+                setTimeout(initializePlacesAutocomplete, 500);
+                return;
+            }
+            
+            try {
+                debugLog('Creating Places Autocomplete instance');
+                
+                const autocomplete = new google.maps.places.Autocomplete(locationInput, {
+                    types: ['geocode'],
+                    componentRestrictions: { country: 'IN' }
+                });
+                
+                // Fix z-index for autocomplete dropdown
+                setTimeout(() => {
+                    const pacContainer = document.querySelector('.pac-container');
+                    if (pacContainer) {
+                        pacContainer.style.zIndex = '10000';
+                        debugLog('Fixed autocomplete z-index');
+                    }
+                }, 100);
+                
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    if (place.geometry && place.formatted_address) {
+                        debugLog('Place selected: ' + place.formatted_address);
+                        debugLog('Coordinates: ' + place.geometry.location.lat() + ', ' + place.geometry.location.lng());
+                        updateStatus('Place selected: ' + place.formatted_address, true);
+                    } else {
+                        debugLog('Invalid place selected');
+                    }
+                });
+                
+                debugLog('Places Autocomplete initialized successfully');
+                updateStatus('Autocomplete ready! Start typing a location...', true);
+                
+            } catch (error) {
+                debugLog('Error initializing Places Autocomplete: ' + error.message);
+                updateStatus('Error initializing autocomplete: ' + error.message);
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('DOM loaded, initializing Google Maps...');
+            initGoogleMaps();
+        });
+    </script>
+</body>
+</html>

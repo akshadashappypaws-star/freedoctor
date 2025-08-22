@@ -1,0 +1,279 @@
+/* FreeDoctor Real-time Notification Styles */
+
+/* Notification Container */
+#notification-container {
+    position: fixed;
+    top: 20px; /* Top margin from viewport */
+    right: 20px;
+    z-index: 999999; /* Much higher than any header/sidebar (1100-1101) */
+    max-width: 400px;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Use gap instead of margin-bottom */
+}
+
+/* Toast Notification Base */
+.notification-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    min-width: 350px;
+    max-width: 400px;
+    word-wrap: break-word;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Toast Animation States */
+.notification-toast.entering {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-toast.exiting {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+/* Toast Background Colors */
+.notification-toast.bg-blue-600 {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    border-left: 4px solid #3b82f6;
+}
+
+.notification-toast.bg-purple-600 {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border-left: 4px solid #8b5cf6;
+}
+
+.notification-toast.bg-green-600 {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-left: 4px solid #10b981;
+}
+
+.notification-toast.bg-red-600 {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-left: 4px solid #ef4444;
+}
+
+.notification-toast.bg-cyan-600 {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    border-left: 4px solid #06b6d4;
+}
+
+/* Icon Container */
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Content Area */
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.notification-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    max-height: 80px;
+    overflow: hidden;
+}
+
+.notification-time {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* Close Button */
+.notification-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Progress Bar Animation */
+.notification-toast::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    animation-duration: var(--duration, 5s);
+    animation-name: notificationProgress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes notificationProgress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    #notification-container {
+        left: 10px;
+        right: 10px;
+        top: 10px; /* Close to top for mobile */
+        max-width: none;
+    }
+    
+    .notification-toast {
+        min-width: auto;
+        max-width: none;
+    }
+    
+    .notification-message {
+        font-size: 12px;
+    }
+    
+    .notification-title {
+        font-size: 13px;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .notification-toast {
+        border: 2px solid white;
+    }
+    
+    .notification-title,
+    .notification-message {
+        color: white;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .notification-toast {
+        transition: none;
+        transform: none;
+    }
+    
+    .notification-toast::before {
+        animation: none;
+    }
+}
+
+/* Dark Mode Compatibility */
+@media (prefers-color-scheme: dark) {
+    .notification-toast {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Focus States for Accessibility */
+.notification-close:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.notification-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.notification-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: notificationSpin 1s linear infinite;
+}
+
+@keyframes notificationSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Stack Management */
+#notification-container > .notification-toast:nth-child(n+4) {
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hover Effects */
+.notification-toast:hover {
+    transform: translateX(-5px) scale(1.02);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.notification-toast:hover::before {
+    animation-play-state: paused;
+}
+
+/* Success Pulse Animation */
+.notification-toast.bg-green-600 .notification-icon {
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Error Shake Animation */
+.notification-toast.bg-red-600 {
+    animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
