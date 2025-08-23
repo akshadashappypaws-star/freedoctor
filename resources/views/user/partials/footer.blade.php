@@ -27,7 +27,7 @@
                         <li><a href="{{ route('user.sponsors') }}">Sponsors</a></li>
                         <li><a href="{{ route('user.organization-camp-request') }}">Request Campaign</a></li>
                         <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="{{ route('contact') }}">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -71,36 +71,14 @@
                         <li><a href="{{ route('user.terms-and-conditions') }}">Terms of Service</a></li>
                         <li><a href="{{ route('user.refund-policy') }}">Refund Policy</a></li>
                         <li><a href="{{ route('user.disclaimer') }}">Disclaimer</a></li>
-                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="{{ route('contact') }}">Contact Support</a></li>
                         <li><a href="#help-center">Help Center</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         
-        <!-- Newsletter Subscription -->
-        <div class="row">
-            <div class="col-12">
-                <div class="newsletter-section">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 mb-3 mb-lg-0">
-                            <h5><i class="fas fa-envelope me-2"></i>Stay Updated with Healthcare News</h5>
-                            <p class="mb-0">Get the latest updates on medical campaigns and health tips.</p>
-                        </div>
-                        <div class="col-lg-6">
-                            <form class="newsletter-form" id="newsletterForm">
-                                <div class="input-group">
-                                    <input type="email" class="form-control" placeholder="Enter your email address" required>
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-paper-plane me-1"></i>Subscribe
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
         
         <!-- Trust Indicators -->
         
@@ -118,11 +96,11 @@
                 <div class="footer-contact">
                     <span class="me-3">
                         <i class="fas fa-phone me-1"></i>
-                        <a href="tel:+911800123456">+91 1800-123-4567</a>
+                        <a href="tel:+917741044366">+91 77410 44366</a>
                     </span>
                     <span>
                         <i class="fas fa-envelope me-1"></i>
-                        <a href="mailto:support@freedoctor.in">support@freedoctor.in</a>
+                        <a href="mailto:info@freedoctor.world">info@freedoctor.world</a>
                     </span>
                 </div>
             </div>

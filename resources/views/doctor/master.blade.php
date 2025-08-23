@@ -1118,14 +1118,18 @@
             </div>
             <!-- Header Actions -->
             <div class="header-actions">
-                @auth('doctor')
-                <!-- Notification Icon -->
+                <!-- Wallet Icon (Always Visible) -->
                 <div class="notification-selector">
-                    <a href="{{ route('doctor.wallet') }}" class="notification-btn" id="doctorNotificationBtn">
-                       <i class="fas fa-wallet"></i>
-                   </a>
+                    @auth('doctor')
+                        <a href="{{ route('doctor.wallet') }}" class="notification-btn" id="doctorNotificationBtn">
+                            <i class="fas fa-wallet"></i>
+                        </a>
+                    @else
+                        <button class="notification-btn" id="doctorWalletLoginBtn" onclick="showWalletLoginPrompt('doctor')">
+                            <i class="fas fa-wallet"></i>
+                        </button>
+                    @endauth
                 </div>
-                @endauth
                 
                 <!-- Language Selector -->
                 <div class="language-selector">
@@ -1390,6 +1394,40 @@
         console.log('📡 Broadcasting disabled in .env - Echo not initialized for doctor');
         window.Echo = null;
         @endif
+
+        // Wallet Login Prompt Function
+        function showWalletLoginPrompt(portalType) {
+            Swal.fire({
+                title: 'Wallet Access',
+                html: `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">💰</div>
+                        <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                            Access your <strong>Wallet & Earnings</strong> to manage payments and rewards.
+                        </p>
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Please login to view your wallet balance, transaction history, and earnings.
+                        </p>
+                    </div>
+                `,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '🔐 Login Now',
+                cancelButtonText: '↩️ Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to appropriate login page
+                    if (portalType === 'user') {
+                        window.location.href = '{{ route("user.login") }}';
+                    } else if (portalType === 'doctor') {
+                        window.location.href = '{{ route("doctor.login") }}';
+                    }
+                }
+            });
+        }
     </script>
 
     <!-- Real-time Notification System -->

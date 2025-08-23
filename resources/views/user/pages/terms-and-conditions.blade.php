@@ -176,7 +176,7 @@
                     <p><strong>Freedoctor Healthcare Pvt. Ltd.</strong></p>
                     <ul>
                         <li><strong>Address:</strong> Laxmi Enclave, Pune, Maharashtra</li>
-                        <li><strong>Email:</strong> <a href="mailto:support@freedoctor.in" style="color: white;">support@freedoctor.in</a></li>
+                        <li><strong>Email:</strong> <a href="mailto:info@freedoctor.world" style="color: white;">info@freedoctor.world</a></li>
                         <li><strong>Phone:</strong> +91 7741044366</li>
                     </ul>
                 </div>

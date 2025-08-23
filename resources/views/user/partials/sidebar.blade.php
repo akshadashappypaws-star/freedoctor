@@ -87,7 +87,7 @@
                 <div class="nav-icon">
                     <i class="fas fa-handshake"></i>
                 </div>
-                <span>Our Business Proposal</span>
+                <span>Lead generation (for doctors)</span>
             </a>
         </div>
 

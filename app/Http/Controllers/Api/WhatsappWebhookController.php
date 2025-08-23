@@ -34,13 +34,44 @@ class WhatsappWebhookController extends Controller
             Log::info('WhatsApp Webhook Verification:', [
                 'mode' => $mode,
                 'token' => $token,
-                'challenge' => $challenge
+                'challenge' => $challenge,
+                'url' => $request->fullUrl(),
+                'all_params' => $request->all()
             ]);
+            
+            // If this is a direct visit (no verification parameters), show status page
+            if (!$mode && !$token && !$challenge) {
+                return response()->json([
+                    'status' => 'active',
+                    'message' => 'WhatsApp Webhook Endpoint',
+                    'timestamp' => now()->toISOString(),
+                    'endpoint' => $request->url(),
+                    'expected_params' => [
+                        'hub.mode' => 'subscribe',
+                        'hub.verify_token' => 'your_verification_token',
+                        'hub.challenge' => 'verification_challenge'
+                    ],
+                    'note' => 'This endpoint is ready to receive WhatsApp webhook requests'
+                ], 200, [], JSON_PRETTY_PRINT);
+            }
             
             if ($mode === 'subscribe' && $token === $verify_token) {
                 return response($challenge, 200);
             }
-            return response('Invalid verification', 403);
+            
+            return response()->json([
+                'error' => 'Invalid verification',
+                'received' => [
+                    'mode' => $mode,
+                    'token_provided' => $token ? 'yes' : 'no',
+                    'challenge' => $challenge ? 'yes' : 'no'
+                ],
+                'expected' => [
+                    'mode' => 'subscribe',
+                    'verify_token' => 'correct_token_required',
+                    'challenge' => 'any_string'
+                ]
+            ], 403, [], JSON_PRETTY_PRINT);
         }
 
         // Handle incoming message

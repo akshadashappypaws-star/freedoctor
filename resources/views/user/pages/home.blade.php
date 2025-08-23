@@ -3,6 +3,11 @@
 @section('title', 'Connecting Doctors, Patients & Communities - FreeDoctor')
 
 @section('content')
+<style>
+    .notificationForm{
+        display:block;
+    }
+</style>
 
 <!-- Material UI CDN -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

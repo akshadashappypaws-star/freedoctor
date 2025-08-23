@@ -147,7 +147,7 @@ body {
 }
 
 .notification-form {
-    display: none;
+  
     padding: 2rem;
     background: var(--surface-color);
 }

@@ -29,7 +29,7 @@
     }
 
     .email-header {
-        background: linear-gradient(135deg, #383F45 0%, #E7A51B 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         padding: 40px 30px;
         text-align: center;
@@ -64,7 +64,7 @@
     .mail-icon svg {
         width: 40px;
         height: 40px;
-        color: #E7A51B;
+        color: #667eea;
     }
 
     .email-title {
@@ -90,7 +90,7 @@
 
     .user-email {
         background: #f8f9fa;
-        border: 2px solid #E7A51B;
+        border: 2px solid #667eea;
         border-radius: 8px;
         padding: 15px;
         text-align: center;
@@ -110,7 +110,7 @@
 
     .verification-steps {
         background: #f8f9fa;
-        border-left: 4px solid #E7A51B;
+        border-left: 4px solid #667eea;
         padding: 20px;
         margin: 25px 0;
         border-radius: 0 8px 8px 0;
@@ -163,8 +163,8 @@
     }
 
     .resend-section {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border: 1px solid #667eea;
         border-radius: 8px;
         padding: 20px;
         margin: 25px 0;
@@ -172,15 +172,15 @@
     }
 
     .resend-text {
-        color: #856404;
+        color: #495057;
         margin-bottom: 15px;
         font-size: 14px;
     }
 
     .btn-resend {
-        background: linear-gradient(135deg, #E7A51B, #F7C873);
-        color: #383F45;
-        border: 2px solid #383F45;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
         padding: 12px 30px;
         border-radius: 25px;
         font-weight: 600;
@@ -193,11 +193,11 @@
     }
 
     .btn-resend:hover {
-        background: linear-gradient(135deg, #383F45, #495057);
+        background: linear-gradient(135deg, #5a6fd8, #6a42a0);
         color: white;
         text-decoration: none;
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(56, 63, 69, 0.3);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
     }
 
     .btn-resend:active {
@@ -229,14 +229,14 @@
     }
 
     .support-link {
-        color: #E7A51B;
+        color: #667eea;
         text-decoration: none;
         font-weight: 600;
         margin: 0 10px;
     }
 
     .support-link:hover {
-        color: #383F45;
+        color: #764ba2;
         text-decoration: underline;
     }
 
@@ -251,7 +251,7 @@
     }
 
     .back-link:hover {
-        color: #383F45;
+        color: #667eea;
         text-decoration: none;
     }
 
@@ -383,8 +383,8 @@
                 Your Trusted Healthcare Partner
             </p>
             <div class="support-info">
-                <a href="mailto:support@freedoctor.com" class="support-link">Email Support</a>
-                <a href="tel:+919876543210" class="support-link">Call Support</a>
+                <a href="mailto:info@freedoctor.world" class="support-link">Email Support</a>
+                <a href="tel:+917741044366" class="support-link">Call Support</a>
             </div>
         </div>
     </div>

@@ -36,6 +36,7 @@ use App\Http\Controllers\User\UserEmailVerificationController;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\User\UserMessageController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\ContactController;
 
 
 // Google OAuth routes moved to user route group
@@ -52,6 +53,11 @@ Route::post('/broadcasting/auth', function (Request $request) {
 Route::get('/', function () {
     return redirect()->route('user.home');
 });
+
+// Contact Us Routes (accessible to all)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+Route::get('/contact/stats', [ContactController::class, 'getStatistics'])->name('contact.stats');
 
 // Debug DB connection
 Route::get('/debug-db', function () {
@@ -518,7 +524,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('password/reset', [AdminPasswordController::class, 'reset'])->name('password.update');
 });
 
-// ------------------------ DOCTOR ROUTES ------------------------
+// ------------------------ DOCTORuser.profile ROUTES ------------------------
 Route::prefix('doctor')->name('doctor.')->group(function () {
     // Auth Routes
     Route::get('/login', [DoctorLoginController::class, 'showLoginForm'])->name('login')->middleware('check.cross.auth:doctor');
@@ -1635,6 +1641,14 @@ Route::get('/test-conversation/{phone}', function($phone) {
         'stats',
         'userInfo'
     ));
+});
+
+// Webhook Monitor Routes (Admin)
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::get('/webhook/monitor', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'index'])->name('admin.webhook.monitor');
+    Route::get('/webhook/logs', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'getLogs'])->name('admin.webhook.logs');
+    Route::post('/webhook/clear', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'clearLogs'])->name('admin.webhook.clear');
+    Route::post('/webhook/test', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'testWebhook'])->name('admin.webhook.test');
 });
 
 // Add these routes to your web.php file

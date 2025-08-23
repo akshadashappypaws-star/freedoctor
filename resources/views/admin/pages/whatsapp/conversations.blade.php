@@ -3,12 +3,62 @@
 @section('title', 'Live Conversations')
 
 @section('content')
+<style>
+.webhook-console-mini {
+    position: relative;
+}
+
+.webhook-console-mini .card {
+    border: 1px solid #17a2b8 !important;
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.2);
+}
+
+.webhook-console-mini .card-body {
+    background: #0d1117 !important;
+    color: #58a6ff !important;
+    font-family: 'Courier New', monospace;
+    line-height: 1.2;
+}
+
+.webhook-console-mini .card-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.webhook-console-mini .card-body::-webkit-scrollbar-track {
+    background: #21262d;
+}
+
+.webhook-console-mini .card-body::-webkit-scrollbar-thumb {
+    background: #58a6ff;
+    border-radius: 2px;
+}
+
+.webhook-console-mini .text-success {
+    color: #3fb950 !important;
+}
+
+.webhook-console-mini .text-danger {
+    color: #f85149 !important;
+}
+
+.webhook-console-mini .text-info {
+    color: #79c0ff !important;
+}
+
+@media (max-width: 768px) {
+    #webhookConsoleBody {
+        height: 150px !important;
+        font-size: 10px !important;
+    }
+}
+</style>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0">Live Conversations</h4>
-                <div class="page-title-right">
+                <div class="page-title-right d-flex align-items-center">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('admin.whatsapp.dashboard') }}">WhatsApp</a></li>
@@ -84,6 +134,44 @@
         </div>
     </div>
     @endif
+
+    <!-- Full Width Webhook Console -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center py-2">
+                    <h5 class="mb-0"><i class="fas fa-terminal mr-2"></i> Webhook Console</h5>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-light px-3" onclick="testWebhookMini()" title="Test with verification">
+                            <i class="fas fa-play mr-1"></i> Test
+                        </button>
+                        <button class="btn btn-sm btn-outline-light px-3" onclick="testWebhookDirect()" title="Direct endpoint check">
+                            <i class="fas fa-globe mr-1"></i> Direct
+                        </button>
+                        <button class="btn btn-sm btn-outline-light px-3" onclick="clearConsoleLogs()" title="Clear console logs">
+                            <i class="fas fa-trash mr-1"></i> Clear
+                        </button>
+                        <button class="btn btn-sm btn-outline-light px-3" onclick="toggleAutoScroll()" title="Toggle auto-scroll" id="autoScrollBtn">
+                            <i class="fas fa-arrows-alt-v mr-1"></i> Auto
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-3" style="height: 200px; overflow-y: auto; background: #0d1117; color: #58a6ff; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.4;" id="webhookConsoleBody">
+                    <div id="webhookConsoleLogs">
+                        <div class="text-success mb-2">
+                            <i class="fas fa-check-circle mr-2"></i>Console ready... listening for webhooks
+                        </div>
+                        <div class="text-info mb-1">
+                            <i class="fas fa-info-circle mr-2"></i>Webhook URL: {{ config('services.whatsapp.webhook_url') }}
+                        </div>
+                        <div class="text-muted">
+                            <i class="fas fa-clock mr-2"></i>Started at {{ date('Y-m-d H:i:s') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-12">
@@ -734,6 +822,137 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(updateConversations, 1000);
     
     console.log('Real-time conversation dashboard initialized');
+});
+
+// Webhook Console Mini Functions
+let autoScrollEnabled = true;
+
+function testWebhookMini() {
+    const webhookUrl = '{{ config("services.whatsapp.webhook_url") }}';
+    addConsoleLog('Testing: ' + webhookUrl, 'info');
+    
+    fetch('{{ route("admin.webhook.test") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            addConsoleLog('✓ ' + data.message, 'success');
+        } else {
+            addConsoleLog('✗ ' + data.message, 'error');
+        }
+        
+        // Show HTTP status
+        if (data.http_code) {
+            addConsoleLog('HTTP ' + data.http_code, data.http_code === 200 ? 'success' : 'error');
+        }
+        
+        // Show response details if different from expected
+        if (data.response && data.expected && data.response !== data.expected) {
+            addConsoleLog('Response: ' + data.response.substring(0, 30) + '...', 'info');
+        }
+    })
+    .catch(error => {
+        addConsoleLog('✗ Network error: ' + error.message, 'error');
+    });
+}
+
+// Test direct webhook endpoint access
+function testWebhookDirect() {
+    const webhookUrl = '{{ config("services.whatsapp.webhook_url") }}';
+    addConsoleLog('Direct test: ' + webhookUrl, 'info');
+    
+    fetch(webhookUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'active') {
+                addConsoleLog('✓ Endpoint active', 'success');
+                addConsoleLog('Status: ' + data.message, 'info');
+            } else if (data.error) {
+                addConsoleLog('⚠ ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            addConsoleLog('✗ Direct access failed', 'error');
+        });
+}
+
+function clearConsoleLogs() {
+    const console = document.getElementById('webhookConsoleLogs');
+    console.innerHTML = '<div class="text-success" style="font-size: 8px;">Console cleared... ready for new logs</div>';
+    addConsoleLog('Console logs cleared', 'info');
+}
+
+function toggleAutoScroll() {
+    autoScrollEnabled = !autoScrollEnabled;
+    const btn = document.getElementById('autoScrollBtn');
+    if (autoScrollEnabled) {
+        btn.innerHTML = '<i class="fas fa-arrows-alt-v"></i> Auto';
+        btn.classList.remove('btn-outline-warning');
+        btn.classList.add('btn-outline-light');
+        addConsoleLog('Auto-scroll enabled', 'success');
+    } else {
+        btn.innerHTML = '<i class="fas fa-pause"></i> Manual';
+        btn.classList.remove('btn-outline-light');
+        btn.classList.add('btn-outline-warning');
+        addConsoleLog('Auto-scroll disabled', 'warning');
+    }
+}
+
+function addConsoleLog(message, type = 'info') {
+    const console = document.getElementById('webhookConsoleLogs');
+    const timestamp = new Date().toLocaleTimeString();
+    const colorClass = type === 'success' ? 'text-success' : type === 'error' ? 'text-danger' : type === 'warning' ? 'text-warning' : 'text-info';
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = colorClass;
+    logEntry.style.fontSize = '8px';
+    logEntry.style.margin = '1px 0';
+    logEntry.innerHTML = `[${timestamp}] ${message}`;
+    
+    console.appendChild(logEntry);
+    
+    // Auto scroll if enabled
+    if (autoScrollEnabled) {
+        const consoleBody = document.getElementById('webhookConsoleBody');
+        consoleBody.scrollTop = consoleBody.scrollHeight;
+    }
+    
+    // Keep only last 30 entries
+    while (console.children.length > 30) {
+        console.removeChild(console.firstChild);
+    }
+}
+
+// Listen for webhook requests (simulated real-time)
+function startWebhookConsoleMonitoring() {
+    setInterval(() => {
+        // Check for new webhook logs from the backend
+        fetch('{{ route("admin.webhook.logs") }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.logs && data.logs.length > 0) {
+                    const latestLog = data.logs[0];
+                    if (latestLog.timestamp !== window.lastWebhookTimestamp) {
+                        addConsoleLog('→ Request received', 'success');
+                        window.lastWebhookTimestamp = latestLog.timestamp;
+                    }
+                }
+            })
+            .catch(() => {
+                // Silently fail
+            });
+    }, 5000); // Check every 5 seconds
+}
+
+// Initialize webhook monitoring when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    startWebhookConsoleMonitoring();
+    addConsoleLog('Monitoring started...', 'info');
 });
 </script>
 

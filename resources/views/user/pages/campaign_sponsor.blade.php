@@ -622,12 +622,12 @@
                     </div>
                 </div>
 
-                <!-- Sponsor Tiers -->
+         
                 <div class="sponsor-tiers-card">
                     <h3 class="form-section-title">Choose Your Sponsorship Level</h3>
                     
-                    <div class="tiers-grid">
-                        <!-- Bronze Tier -->
+                    <!-- <div class="tiers-grid">
+                      
                         <div class="tier-card" data-tier="bronze" data-amount="1000">
                             <div class="tier-icon">🥉</div>
                             <div class="tier-name">Bronze Sponsor</div>
@@ -639,7 +639,7 @@
                             </ul>
                         </div>
                         
-                        <!-- Silver Tier -->
+                      
                         <div class="tier-card" data-tier="silver" data-amount="5000">
                             <div class="tier-icon">🥈</div>
                             <div class="tier-name">Silver Sponsor</div>
@@ -652,7 +652,7 @@
                             </ul>
                         </div>
                         
-                        <!-- Gold Tier -->
+                        
                         <div class="tier-card" data-tier="gold" data-amount="10000">
                             <div class="tier-icon">🥇</div>
                             <div class="tier-name">Gold Sponsor</div>
@@ -666,7 +666,7 @@
                             </ul>
                         </div>
                         
-                        <!-- Platinum Tier -->
+                     
                         <div class="tier-card" data-tier="platinum" data-amount="25000">
                             <div class="tier-icon">💎</div>
                             <div class="tier-name">Platinum Sponsor</div>
@@ -680,7 +680,7 @@
                             </ul>
                         </div>
                     </div>
-                    
+                     -->
                     <!-- Custom Amount Section -->
                     <div class="custom-amount-section" id="customAmountSection">
                         <h4 style="margin-bottom: 1rem; color: var(--primary-color);">
