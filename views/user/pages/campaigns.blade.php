@@ -3584,7 +3584,7 @@ function loadGoogleMaps() {
     
     debugLog('Loading Google Maps API...');
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek&libraries=places&callback=handleGoogleMapsLoad&loading=async`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=handleGoogleMapsLoad&loading=async`;
     script.async = true;
     script.defer = true;
     script.onerror = window.handleGoogleMapsError;

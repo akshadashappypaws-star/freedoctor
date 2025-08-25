@@ -2117,7 +2117,7 @@ $(document).ready(function () {
 
 <!-- Load Google Maps API with callback -->
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek&libraries=places&callback=initMaps"
+    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initMaps"
     async
     defer
     onerror="console.error('Failed to load Google Maps API')"

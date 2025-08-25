@@ -4014,7 +4014,7 @@ window.handleGoogleMapsError = function() {
     
     // Log helpful information for debugging
     console.error('Google Maps API Error. Check:');
-    console.error('1. API key is valid: AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek');
+    console.error('1. API key is configured from environment');
     console.error('2. Current URL authorized in Google Cloud Console');
     console.error('3. Places API enabled in Google Cloud Console');
     console.error('4. Referrer restrictions properly configured');
@@ -4054,7 +4054,7 @@ function loadGoogleMaps() {
     }
     
     debugLog('Loading Google Maps API...');
-    const apiKey = 'AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek';
+    const apiKey = '{{ env("GOOGLE_MAPS_API_KEY") }}';
     console.log('API Key configured:', apiKey ? "Yes" : "No");
     console.log('API Key value:', apiKey);
     console.log('Loading from URL:', window.location.href);
