@@ -1,0 +1,6 @@
+# Add Docker files to .gitignore
+.env.docker
+deploy-docker.log
+
+# Docker volumes
+mysql_data/
