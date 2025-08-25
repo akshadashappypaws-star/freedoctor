@@ -806,29 +806,370 @@ class WhatsappBotController extends Controller
             // Fetch approved templates from WhatsApp API
             $approvedTemplates = $this->whatsappService->fetchTemplates(true);
             
-            // Get campaigns for linking
-            $campaigns = \App\Models\Campaign::where('approval_status', 'approved')
-                                           ->with('doctor', 'category')
+            // Get all campaigns (not just approved ones) for better access to whole table data
+            $campaigns = \App\Models\Campaign::with(['doctor', 'category', 'doctorPayments', 'patientPayments'])
                                            ->get();
+            
+            // Get all doctors for template access
+            $doctors = \App\Models\Doctor::with(['specializations', 'categories', 'campaigns'])->get();
+            
+            // Get all categories for template access
+            $categories = \App\Models\Category::with(['campaigns', 'doctors'])->get();
+            
+            // Get all patients for template access
+            $patients = \App\Models\Patient::with(['payments', 'registrations'])->get();
             
             // Get existing template-campaign mappings
             $templateCampaigns = WhatsappTemplateCampaign::with(['whatsappTemplate', 'campaign'])
                                                        ->where('is_active', true)
                                                        ->get();
 
-            return view('admin.pages.whatsapp.templates', compact('approvedTemplates', 'campaigns', 'templateCampaigns'));
+            // Prepare all data for templates to access
+            $tableData = [
+                'campaigns' => $campaigns,
+                'doctors' => $doctors,
+                'categories' => $categories,
+                'patients' => $patients,
+                'template_campaigns' => $templateCampaigns
+            ];
+
+            return view('admin.pages.whatsapp.templates', compact('approvedTemplates', 'campaigns', 'templateCampaigns', 'tableData'));
         } catch (\Exception $e) {
             Log::error('Templates page error', ['error' => $e->getMessage()]);
             
             // Fallback to empty arrays if API fails
             $approvedTemplates = [];
-            $campaigns = \App\Models\Campaign::where('approval_status', 'approved')
-                                           ->with('doctor', 'category')
-                                           ->get();
+            $campaigns = \App\Models\Campaign::with(['doctor', 'category'])->get();
             $templateCampaigns = [];
+            $tableData = [
+                'campaigns' => $campaigns,
+                'doctors' => collect([]),
+                'categories' => collect([]),
+                'patients' => collect([]),
+                'template_campaigns' => collect([])
+            ];
             
-            return view('admin.pages.whatsapp.templates', compact('approvedTemplates', 'campaigns', 'templateCampaigns'))
+            return view('admin.pages.whatsapp.templates', compact('approvedTemplates', 'campaigns', 'templateCampaigns', 'tableData'))
                 ->with('error', 'Failed to load templates: ' . $e->getMessage());
+        }
+    }
+
+    public function sendTemplateMessage(Request $request)
+    {
+        try {
+            $request->validate([
+                'template_name' => 'required|string',
+                'phone' => 'required|string',
+                'parameters' => 'nullable|array'
+            ]);
+
+            $phone = $request->phone;
+            $templateName = $request->template_name;
+            $parameters = $request->parameters ?? [];
+
+            // Send template message via WhatsApp API
+            $result = $this->whatsappService->sendTemplateMessage($phone, $templateName, $parameters);
+
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Template message sent successfully!'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send template message'
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Send template message error', [
+                'error' => $e->getMessage(),
+                'phone' => $request->phone ?? null,
+                'template' => $request->template_name ?? null
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sending message: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getTableData(Request $request)
+    {
+        try {
+            $table = $request->input('table');
+            $tables = $request->input('tables'); // For multiple tables
+            
+            // Handle multiple tables request
+            if ($tables && is_array($tables)) {
+                $allData = [];
+                foreach ($tables as $tableName) {
+                    $allData[$tableName] = $this->getSingleTableData($tableName);
+                }
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $allData,
+                    'multiple' => true
+                ]);
+            }
+            
+            // Handle single table request
+            if ($table) {
+                $data = $this->getSingleTableData($table);
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $data
+                ]);
+            }
+            
+            return response()->json(['success' => false, 'message' => 'No table specified']);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching table data: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    private function getSingleTableData($tableName)
+    {
+        switch($tableName) {
+            case 'campaigns':
+                return \App\Models\Campaign::with(['doctor', 'category', 'doctorPayments', 'patientPayments'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    
+            case 'doctors':
+                return \App\Models\Doctor::with(['specializations', 'categories', 'campaigns'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    
+            case 'categories':
+                return \App\Models\Category::with(['campaigns', 'doctors'])
+                    ->orderBy('name', 'asc')
+                    ->get();
+                    
+            case 'patients':
+                return \App\Models\Patient::with(['payments', 'registrations'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    
+            case 'payments':
+                return \App\Models\PatientPayment::with(['patient', 'campaign'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    
+            case 'registrations':
+                return \App\Models\Booking::with(['patient', 'doctor', 'campaign'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    
+            case 'messages':
+                return \App\Models\WhatsappMessage::with(['conversation'])
+                    ->orderBy('created_at', 'desc')
+                    ->limit(1000)
+                    ->get();
+                    
+            default:
+                throw new \Exception('Invalid table name: ' . $tableName);
+        }
+    }
+
+    public function getMultipleTablesData(Request $request)
+    {
+        try {
+            $tables = $request->input('tables', []);
+            
+            if (empty($tables) || !is_array($tables)) {
+                return response()->json(['success' => false, 'message' => 'No tables specified']);
+            }
+            
+            $allData = [];
+            $errors = [];
+            
+            foreach ($tables as $tableName) {
+                try {
+                    $allData[$tableName] = $this->getSingleTableData($tableName);
+                } catch (\Exception $e) {
+                    $errors[$tableName] = $e->getMessage();
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $allData,
+                'errors' => $errors,
+                'tables_loaded' => count($allData),
+                'tables_requested' => count($tables)
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching multiple tables data: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getTablePreview(Request $request)
+    {
+        try {
+            $templateId = $request->input('template_id');
+            $linkedTables = $request->input('linked_tables', []);
+            $rowLimits = $request->input('row_limits', []);
+            $filters = $request->input('filters', []);
+
+            if (empty($linkedTables)) {
+                return response()->json(['success' => false, 'message' => 'No tables selected']);
+            }
+
+            // Get template details
+            $template = WhatsappTemplate::find($templateId);
+            if (!$template) {
+                return response()->json(['success' => false, 'message' => 'Template not found']);
+            }
+
+            $totalRecords = 0;
+            $previewData = [];
+
+            // Fetch data from selected tables
+            foreach ($linkedTables as $tableName) {
+                if ($tableName === 'all') continue;
+                
+                $limit = isset($rowLimits[$tableName]) ? (int)$rowLimits[$tableName] : 10;
+                $tableData = $this->getSingleTableData($tableName);
+                
+                if ($tableData->isNotEmpty()) {
+                    $limitedData = $tableData->take($limit);
+                    $totalRecords += $limitedData->count();
+                    $previewData[$tableName] = $limitedData;
+                }
+            }
+
+            // Generate preview content
+            $previewContent = "Template: {$template->name}\n";
+            $previewContent .= "Linked Tables: " . implode(', ', $linkedTables) . "\n";
+            $previewContent .= "Total Records: {$totalRecords}\n\n";
+
+            foreach ($previewData as $tableName => $data) {
+                $previewContent .= "=== {$tableName} DATA ({$data->count()} records) ===\n";
+                foreach ($data->take(3) as $record) { // Show first 3 records as example
+                    $previewContent .= "ID: {$record->id}";
+                    if (isset($record->name)) $previewContent .= ", Name: {$record->name}";
+                    if (isset($record->title)) $previewContent .= ", Title: {$record->title}";
+                    $previewContent .= "\n";
+                }
+                $previewContent .= "\n";
+            }
+
+            return response()->json([
+                'success' => true,
+                'preview' => $previewContent,
+                'records_count' => $totalRecords,
+                'tables_count' => count($previewData)
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error generating preview: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function testTableLink(Request $request)
+    {
+        try {
+            $templateId = $request->input('template_id');
+            $phone = $request->input('phone');
+            $linkedTables = $request->input('linked_tables', []);
+
+            if (!$templateId || !$phone || empty($linkedTables)) {
+                return response()->json(['success' => false, 'message' => 'Missing required parameters']);
+            }
+
+            // Get template name
+            $template = WhatsappTemplate::find($templateId);
+            if (!$template) {
+                return response()->json(['success' => false, 'message' => 'Template not found']);
+            }
+
+            // Prepare parameters with table data
+            $parameters = [];
+            foreach ($linkedTables as $tableName) {
+                if ($tableName === 'all') continue;
+                
+                $tableData = $this->getSingleTableData($tableName);
+                if ($tableData->isNotEmpty()) {
+                    $firstRecord = $tableData->first();
+                    $parameters[] = "{$tableName}: " . ($firstRecord->name ?? $firstRecord->title ?? $firstRecord->id);
+                }
+            }
+
+            // Send test message
+            $result = $this->whatsappService->sendTemplateMessage($phone, $template->name, $parameters);
+
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Test message sent successfully with table data!'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send test message'
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sending test message: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function saveTableLink(Request $request)
+    {
+        try {
+            $request->validate([
+                'template_id' => 'required|string',
+                'linked_tables' => 'required|array',
+                'trigger_event' => 'required|string',
+                'delay_minutes' => 'integer|min:0',
+                'priority' => 'string'
+            ]);
+
+            // Create a new WhatsApp template table link record
+            $tableLink = new \App\Models\WhatsappTemplateTableLink();
+            $tableLink->template_id = $request->template_id;
+            $tableLink->linked_tables = json_encode($request->linked_tables);
+            $tableLink->trigger_event = $request->trigger_event;
+            $tableLink->delay_minutes = $request->delay_minutes ?? 0;
+            $tableLink->priority = $request->priority ?? 'normal';
+            $tableLink->table_fields = json_encode($request->table_fields ?? []);
+            $tableLink->row_limits = json_encode($request->row_limits ?? []);
+            $tableLink->sort_orders = json_encode($request->sort_orders ?? []);
+            $tableLink->filters = json_encode($request->filters ?? []);
+            $tableLink->is_active = true;
+            $tableLink->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Template successfully linked to tables!',
+                'link_id' => $tableLink->id
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving table link: ' . $e->getMessage()
+            ]);
         }
     }
 

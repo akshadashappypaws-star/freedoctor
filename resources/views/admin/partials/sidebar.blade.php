@@ -143,22 +143,137 @@
         </div>
         
         <ul class="nav-list whatsapp-section">
+            <!-- Main Dashboard -->
             <li class="nav-item whatsapp-item">
                 <a href="{{ route('admin.whatsapp.dashboard') }}" 
-                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.*') ? 'nav-link-active' : '' }}"
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.dashboard') ? 'nav-link-active' : '' }}"
                    data-gradient="from-green-500 to-green-600"
-                   title="Complete WhatsApp workflow management system">
-                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.*') ? 'nav-icon-active' : '' }}">
+                   title="WhatsApp Dashboard">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.dashboard') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Dashboard</span>
+                        <span class="nav-description">Overview & Analytics</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.dashboard'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Automation System -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.automation') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.automation') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-blue-500 to-blue-600"
+                   title="Automation Overview">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.automation') ? 'nav-icon-active' : '' }}">
                         <i class="fas fa-robot"></i>
                     </div>
                     <div class="nav-content">
-                        <span class="nav-text">WhatsApp Agent Manager</span>
-                        <span class="nav-description">AI-powered conversation workflow system</span>
+                        <span class="nav-text">Automation</span>
+                        <span class="nav-description">AI-powered workflows</span>
                     </div>
                     <span class="nav-badge badge-ai">
-                        NEW
+                        AI
                     </span>
-                    @if(request()->routeIs('admin.whatsapp.*'))
+                    @if(request()->routeIs('admin.whatsapp.automation'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Automation Rules -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.automation.rules') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.automation.rules') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-indigo-500 to-indigo-600"
+                   title="Automation Rules">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.automation.rules') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Rules Management</span>
+                        <span class="nav-description">Configure automation rules</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.automation.rules'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Message Templates -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.templates') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.templates') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-cyan-500 to-cyan-600"
+                   title="Message Templates">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.templates') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Templates</span>
+                        <span class="nav-description">Message templates</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.templates'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Bulk Messages -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.bulk-messages') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.bulk-messages') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-orange-500 to-orange-600"
+                   title="Bulk Messages">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.bulk-messages') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Bulk Messages</span>
+                        <span class="nav-description">Mass messaging campaigns</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.bulk-messages'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Conversations -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.conversations') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.conversations') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-green-500 to-green-600"
+                   title="Conversations">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.conversations') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Conversations</span>
+                        <span class="nav-description">Chat management</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.conversations'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Settings -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.settings') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.settings') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-gray-500 to-gray-600"
+                   title="WhatsApp Settings">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.settings') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Settings</span>
+                        <span class="nav-description">Configuration options</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.settings'))
                         <div class="active-indicator"></div>
                     @endif
                 </a>

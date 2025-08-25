@@ -359,6 +359,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('whatsapp')->name('whatsapp.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'index'])->name('dashboard');
             
+            // Enhanced UI Demo Route
+            Route::get('/ui-demo', function () {
+                return view('admin.pages.whatsapp.ui-demo');
+            })->name('ui-demo');
+            
             // Scenario Workflow Management
             Route::get('/workflows', [\App\Http\Controllers\Admin\WorkflowController::class, 'index'])->name('workflows');
             Route::get('/workflows/create', [\App\Http\Controllers\Admin\WorkflowController::class, 'create'])->name('workflows.create');
@@ -390,10 +395,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
             
             // Automation Rules
             Route::get('/automation', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'index'])->name('automation');
+            Route::get('/automation/workflow', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'workflow'])->name('automation.workflow');
+            Route::get('/automation/rules', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'rules'])->name('automation.rules');
+            Route::get('/automation/analytics', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'analytics'])->name('automation.analytics');
+            Route::get('/automation/machines', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'machines'])->name('automation.machines');
+            Route::get('/automation/stats', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'getStats'])->name('automation.stats');
             Route::post('/automation/rules', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'storeRule'])->name('automation.rules.store');
             Route::put('/automation/rules/{rule}', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'updateRule'])->name('automation.rules.update');
             Route::delete('/automation/rules/{rule}', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'deleteRule'])->name('automation.rules.delete');
             Route::post('/automation/rules/{rule}/toggle', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'toggleRule'])->name('automation.rules.toggle');
+            Route::post('/automation/rules/{rule}/test', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'testRule'])->name('automation.rules.test');
+            
+            // Workflow Management Routes
+            Route::get('/automation/workflows/{workflow}/preview', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'previewWorkflow'])->name('automation.workflows.preview');
+            Route::post('/automation/workflows/{workflow}/activate', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'activateWorkflow'])->name('automation.workflows.activate');
+            Route::post('/automation/workflows/{workflow}/duplicate', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'duplicateWorkflow'])->name('automation.workflows.duplicate');
+            Route::get('/automation/workflows/{workflow}/visualization', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'getWorkflowVisualization'])->name('automation.workflows.visualization');
+            Route::get('/automation/workflows/{workflow}', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'getWorkflowDetails'])->name('automation.workflows.details');
+            Route::post('/automation/workflows/{workflow}/pause', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'pauseWorkflow'])->name('automation.workflows.pause');
+            Route::post('/automation/workflows/{workflow}/stop', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'stopWorkflow'])->name('automation.workflows.stop');
+            
+            // Live Data Routes
+            Route::get('/automation/live-stats', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'getLiveStats'])->name('automation.live-stats');
+            Route::get('/automation/active-workflows', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'getActiveWorkflows'])->name('automation.active-workflows');
+            
+            // Workflow Builder Routes
+            Route::post('/automation/workflows/save', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'saveWorkflow'])->name('automation.workflows.save');
+            Route::post('/automation/workflows/test', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'testWorkflowBuilder'])->name('automation.workflows.test');
             
             // Machine Management
             Route::get('/machines', [\App\Http\Controllers\Admin\WhatsappMachineController::class, 'index'])->name('machines');
@@ -448,6 +476,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/templates/{id}', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'deleteTemplate'])->name('templates.delete');
             Route::post('/templates/sync', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'syncTemplates'])->name('templates.sync');
             Route::post('/templates/test', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'testTemplate'])->name('templates.test');
+            Route::post('/templates/send', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'sendTemplateMessage'])->name('templates.send');
+            Route::post('/templates/table-data', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'getTableData'])->name('templates.table-data');
+            Route::post('/templates/multiple-tables', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'getMultipleTablesData'])->name('templates.multiple-tables');
+            Route::post('/templates/table-preview', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'getTablePreview'])->name('templates.table-preview');
+            Route::post('/templates/test-table-link', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'testTableLink'])->name('templates.test-table-link');
+            Route::post('/templates/save-table-link', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'saveTableLink'])->name('templates.save-table-link');
             
             // Template-Campaign Linking
             Route::post('/refresh-templates', [\App\Http\Controllers\Admin\WhatsappBotController::class, 'refreshTemplates'])->name('refresh-templates');
@@ -1647,8 +1681,12 @@ Route::get('/test-conversation/{phone}', function($phone) {
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::get('/webhook/monitor', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'index'])->name('admin.webhook.monitor');
     Route::get('/webhook/logs', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'getLogs'])->name('admin.webhook.logs');
+    Route::get('/webhook/received-messages', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'getReceivedMessagesAjax'])->name('admin.webhook.received-messages');
     Route::post('/webhook/clear', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'clearLogs'])->name('admin.webhook.clear');
     Route::post('/webhook/test', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'testWebhook'])->name('admin.webhook.test');
+    Route::post('/webhook/send-test-message', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'sendTestMessage'])->name('admin.webhook.send-test');
+    Route::get('/webhook/debug', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'debug'])->name('admin.webhook.debug');
+    Route::get('/webhook/live-logs', [App\Http\Controllers\Admin\WebhookMonitorController::class, 'getLiveLogs'])->name('admin.webhook.live-logs');
 });
 
 // Add these routes to your web.php file

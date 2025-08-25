@@ -4,7 +4,7 @@
             <h4 class="mb-0">Bulk Message Sender</h4>
         </div>
         <div class="card-body">
-            <form id="bulk-message-form" method="POST" action="{{ route('admin.whatsapp.bulk-messages.send') }}" enctype="multipart/form-data">
+            <form id="bulk-message-form" method="POST" action="{{ route('admin.whatsapp.bulk-messages') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="excel_file">Upload Excel File <small>(Columns: name [optional], phone [required])</small></label>

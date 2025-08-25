@@ -9,15 +9,33 @@ class AddTrackingToWhatsappBulkMessages extends Migration
     public function up()
     {
         Schema::table('whatsapp_bulk_messages', function (Blueprint $table) {
-            $table->integer('total_numbers')->default(0);
-            $table->integer('sent_count')->default(0);
-            $table->integer('failed_count')->default(0);
-            $table->integer('pending_count')->default(0);
-            $table->json('invalid_numbers')->nullable();
-            $table->json('delivery_status')->nullable();
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
-            $table->float('progress_percentage')->default(0);
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'total_numbers')) {
+                $table->integer('total_numbers')->default(0);
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'sent_count')) {
+                $table->integer('sent_count')->default(0);
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'failed_count')) {
+                $table->integer('failed_count')->default(0);
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'pending_count')) {
+                $table->integer('pending_count')->default(0);
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'invalid_numbers')) {
+                $table->json('invalid_numbers')->nullable();
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'delivery_status')) {
+                $table->json('delivery_status')->nullable();
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'started_at')) {
+                $table->timestamp('started_at')->nullable();
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'completed_at')) {
+                $table->timestamp('completed_at')->nullable();
+            }
+            if (!Schema::hasColumn('whatsapp_bulk_messages', 'progress_percentage')) {
+                $table->float('progress_percentage')->default(0);
+            }
         });
     }
 

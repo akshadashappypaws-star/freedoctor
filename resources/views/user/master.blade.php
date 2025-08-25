@@ -1045,6 +1045,17 @@
         }
     </script>
 
+    <!-- Core JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- FreeDoctor Global Libraries -->
+    <script src="{{ asset('js/freedoctor-global.js') }}"></script>
+    <script src="{{ asset('js/campaign-functions.js') }}"></script>
+    <script src="{{ asset('js/admin-functions.js') }}"></script>
+    <script src="{{ asset('js/complete-fix.js') }}"></script>
+
     @stack('scripts')
 </body>
 </html>

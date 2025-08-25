@@ -2691,13 +2691,18 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
     margin-top: 2px !important;
     min-width: 200px !important;
+    max-width: 400px !important;
+    width: auto !important;
 }
 
 .pac-item {
-    padding: 10px !important;
+    padding: 12px 16px !important;
     border-bottom: 1px solid #eee !important;
     cursor: pointer !important;
     font-family: inherit !important;
+    line-height: 1.4 !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
 }
 
 .pac-item:hover {
@@ -2707,6 +2712,91 @@
 .pac-matched {
     font-weight: bold !important;
     color: #1a73e8 !important;
+}
+
+/* Mobile responsive autocomplete */
+@media (max-width: 768px) {
+    .pac-container {
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        position: fixed !important;
+        top: auto !important;
+    }
+    
+    .pac-item {
+        padding: 16px !important;
+        font-size: 16px !important;
+    }
+}
+
+/* Hide Google branding and logo */
+.pac-logo::after,
+.pac-container::after,
+.pac-container .pac-logo,
+.pac-container .pac-item .pac-icon-marker,
+.pac-logo,
+.pac-footer,
+img[src*="powered_by_google"],
+img[src*="google_logo"],
+a[href*="maps.google.com"],
+div[title*="Powered by Google"],
+div[aria-label*="Powered by Google"],
+.gm-style-cc,
+.gmnoprint {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Remove powered by Google text */
+.pac-container::after,
+.pac-container .pac-logo::after {
+    content: none !important;
+}
+
+/* Enhanced autocomplete styling */
+.pac-container {
+    background: var(--white) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-lg) !important;
+    margin-top: 2px !important;
+}
+
+.pac-item {
+    border-bottom: 1px solid #f0f0f0 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    color: var(--text-primary) !important;
+}
+
+.pac-item:hover {
+    background-color: #f8f9fa !important;
+}
+
+.pac-item-query {
+    color: var(--primary-color) !important;
+    font-weight: 500 !important;
+}
+
+/* Custom styling for cleaner autocomplete */
+.pac-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.pac-item {
+    line-height: 1.4 !important;
+    color: #333 !important;
+}
+
+.pac-item-query {
+    color: #1a73e8 !important;
+    font-weight: 500 !important;
 }
 
 /* Ensure location input is properly positioned */
@@ -2785,6 +2875,291 @@
 
     .progress-header {
         font-size: 0.8rem;
+    }
+}
+
+/* ===== MOBILE LOCATION MODAL STYLES ===== */
+.mobile-location-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.mobile-location-modal.active {
+    display: block;
+}
+
+.mobile-location-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-location-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
+}
+
+.mobile-location-back {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.mobile-location-back:hover {
+    background: var(--light-gray);
+}
+
+.mobile-location-header h3 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.mobile-location-spacer {
+    width: 40px;
+}
+
+.mobile-location-search {
+    padding: 20px;
+    background: var(--white);
+}
+
+.mobile-location-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--light-gray);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.mobile-location-input-wrapper:focus-within {
+    border-color: var(--primary-color);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.mobile-location-input-wrapper i {
+    color: var(--text-muted);
+    margin-right: 12px;
+    font-size: 1rem;
+}
+
+.mobile-location-input-wrapper input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 1rem;
+    color: var(--text-dark);
+    padding: 0;
+}
+
+.mobile-location-input-wrapper input::placeholder {
+    color: var(--text-muted);
+}
+
+.mobile-location-clear {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    margin-left: 8px;
+    transition: all 0.2s ease;
+}
+
+.mobile-location-clear:hover {
+    background: var(--border-color);
+    color: var(--text-dark);
+}
+
+.mobile-location-options {
+    padding: 0 20px 20px;
+}
+
+.mobile-location-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.mobile-location-option:hover {
+    border-color: var(--primary-color);
+    background: rgba(44, 42, 76, 0.02);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.mobile-location-option.current-location .mobile-location-option-icon {
+    background: linear-gradient(135deg, var(--primary-color), #4a47a3);
+}
+
+.mobile-location-option-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    margin-right: 16px;
+    font-size: 1.2rem;
+}
+
+.mobile-location-option-content {
+    flex: 1;
+}
+
+.mobile-location-option-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.mobile-location-option-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.mobile-location-option-arrow {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.mobile-location-suggestions {
+    flex: 1;
+    padding: 0 20px 20px;
+}
+
+.mobile-location-suggestion {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.mobile-location-suggestion:hover {
+    background: var(--light-gray);
+}
+
+.mobile-location-suggestion:last-child {
+    border-bottom: none;
+}
+
+.mobile-location-suggestion-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+
+.mobile-location-suggestion-content {
+    flex: 1;
+}
+
+.mobile-location-suggestion-title {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.mobile-location-suggestion-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.mobile-location-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.mobile-location-loading-content {
+    text-align: center;
+}
+
+.mobile-location-loading-content i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.mobile-location-loading-content p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Show mobile modal only on mobile devices */
+@media (max-width: 768px) {
+    /* Make regular location input readonly and clickable on mobile */
+    .location-input-inline input {
+        cursor: pointer;
+    }
+    
+    .location-input-inline input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+}
+
+/* Hide mobile modal on desktop */
+@media (min-width: 769px) {
+    .mobile-location-modal {
+        display: none !important;
     }
 }
 </style>
@@ -2935,6 +3310,63 @@
             <button type="button" onclick="clearFilters()" class="btn btn-outline-danger">Clear All</button>
             <button type="button" onclick="closeFilterModal()" class="btn btn-secondary">Cancel</button>
             <button type="button" id="applyFiltersBtn" class="btn btn-primary">Apply Filters</button>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Location Search Modal -->
+<div id="mobileLocationModal" class="mobile-location-modal">
+    <div class="mobile-location-content">
+        <!-- Header -->
+        <div class="mobile-location-header">
+            <button type="button" class="mobile-location-back" onclick="closeMobileLocationModal()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>Set Your Location</h3>
+            <div class="mobile-location-spacer"></div>
+        </div>
+        
+        <!-- Search Input -->
+        <div class="mobile-location-search">
+            <div class="mobile-location-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" 
+                       id="mobileLocationInput"
+                       placeholder="Search for your location..."
+                       autocomplete="off">
+                <button type="button" class="mobile-location-clear" onclick="clearMobileLocationInput()" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Quick Options -->
+        <div class="mobile-location-options">
+            <button type="button" class="mobile-location-option current-location" onclick="getCurrentLocation()">
+                <div class="mobile-location-option-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+                <div class="mobile-location-option-content">
+                    <div class="mobile-location-option-title">Use Current Location</div>
+                    <div class="mobile-location-option-subtitle">Enable GPS for precise results</div>
+                </div>
+                <div class="mobile-location-option-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+        </div>
+        
+        <!-- Suggestions List -->
+        <div class="mobile-location-suggestions" id="mobileLocationSuggestions">
+            <!-- Dynamic suggestions will be added here -->
+        </div>
+        
+        <!-- Loading State -->
+        <div class="mobile-location-loading" id="mobileLocationLoading" style="display: none;">
+            <div class="mobile-location-loading-content">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Finding your location...</p>
+            </div>
         </div>
     </div>
 </div>
@@ -3572,24 +4004,119 @@ window.handleGoogleMapsLoad = function() {
 window.handleGoogleMapsError = function() {
     errorLog('Google Maps failed to load');
     googleMapsLoaded = false;
+    
+    // Show user-friendly error message
+    const locationInput = document.getElementById('locationSearchInput');
+    if (locationInput) {
+        locationInput.placeholder = 'Location search unavailable - Please type manually';
+        locationInput.disabled = false; // Keep enabled for manual input
+    }
+    
+    // Log helpful information for debugging
+    console.error('Google Maps API Error. Check:');
+    console.error('1. API key is valid: AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek');
+    console.error('2. Current URL authorized in Google Cloud Console');
+    console.error('3. Places API enabled in Google Cloud Console');
+    console.error('4. Referrer restrictions properly configured');
+    console.error('Current URL:', window.location.href);
+    console.error('Current Origin:', window.location.origin);
+    console.error('Current Host:', window.location.host);
+    
+    // Check for specific error types
+    if (window.gm_authFailure) {
+        console.error('Authentication failure detected');
+    }
+}
+
+// Global error handler for Google Maps authentication failures
+window.gm_authFailure = function() {
+    console.error('Google Maps Authentication Failure!');
+    console.error('This usually means:');
+    console.error('1. Invalid API key');
+    console.error('2. API key restrictions are blocking this domain');
+    console.error('3. Billing is not set up properly');
+    console.error('4. The API is not enabled');
+    
+    // Disable autocomplete but keep manual input working
+    const locationInput = document.getElementById('locationSearchInput');
+    if (locationInput) {
+        locationInput.placeholder = 'Enter location manually (Maps unavailable)';
+        locationInput.disabled = false;
+    }
 }
 
 // Load Google Maps script dynamically with proper async loading
 function loadGoogleMaps() {
     if (window.google && window.google.maps) {
         debugLog('Google Maps already loaded');
-        window.handleGoogleMapsLoad();
+        initializePlacesAutocomplete();
         return;
     }
     
     debugLog('Loading Google Maps API...');
+    const apiKey = 'AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek';
+    console.log('API Key configured:', apiKey ? "Yes" : "No");
+    console.log('API Key value:', apiKey);
+    console.log('Loading from URL:', window.location.href);
+    console.log('Current domain:', window.location.hostname + ':' + window.location.port);
+    
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAaAGMxei5r_4i_3Yw2LBNLtu56KE5mVek&libraries=places&callback=handleGoogleMapsLoad&loading=async`;
+    const mapsUrl = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=handleGoogleMapsLoad&loading=async&v=weekly`;
+    console.log('Full Maps URL:', mapsUrl);
+    
+    script.src = mapsUrl;
     script.async = true;
     script.defer = true;
-    script.onerror = window.handleGoogleMapsError;
+    script.onerror = function(error) {
+        console.error('Script loading error:', error);
+        console.error('Failed URL:', mapsUrl);
+        handleGoogleMapsError();
+    };
+    
+    // Add additional error handling
+    script.onload = function() {
+        console.log('Google Maps script loaded successfully');
+    };
+    
     document.head.appendChild(script);
+    
+    // Set a timeout to catch hanging loads
+    setTimeout(() => {
+        if (!window.google || !window.google.maps) {
+            console.error('Google Maps failed to load within 10 seconds');
+            console.error('Possible causes:');
+            console.error('1. API key restrictions');
+            console.error('2. Network issues');
+            console.error('3. Domain not whitelisted');
+            handleGoogleMapsError();
+        }
+    }, 10000);
 }
+
+// Google Maps callback functions
+window.handleGoogleMapsLoad = function() {
+    console.log('Google Maps loaded successfully');
+    googleMapsLoaded = true;
+    initializePlacesAutocomplete();
+};
+
+window.handleGoogleMapsError = function() {
+    console.error('Google Maps failed to load');
+    googleMapsLoaded = false;
+    
+    // Show error message to user
+    const locationInput = document.getElementById('locationSearchInput');
+    if (locationInput) {
+        locationInput.placeholder = 'Enter location manually (Maps unavailable)';
+        locationInput.title = 'Google Maps is currently unavailable. You can still enter location manually.';
+    }
+    
+    // Add manual location functionality
+    setupManualLocationInput();
+    
+    // Show a user-friendly notification
+    showLocationError('Google Maps is temporarily unavailable. You can still search by entering your location manually.');
+};
 </script>
 
 <script>
@@ -3604,10 +4131,28 @@ let originalCampaignsHtml = '';
 let lastSearchQuery = '';
 
 // Pune coordinates as fallback
+// Default Pune coordinates
 const puneCoordinates = {
     lat: 18.5204,
     lng: 73.8567
 };
+
+function setDefaultLocation() {
+    // Set Pune as default location
+    userLatitude = puneCoordinates.lat;
+    userLongitude = puneCoordinates.lng;
+    
+    // Update location display
+    updateLocationDisplay('Pune, Maharashtra');
+    
+    debugLog('Default location set to Pune', { lat: userLatitude, lng: userLongitude });
+}
+
+function loadInitialCampaigns() {
+    debugLog('Loading initial campaigns with current location');
+    // Load campaigns based on current location (default Pune or user location if available)
+    performLocationBasedSearch('', '');
+}
 
 // ===== UTILITY FUNCTIONS =====
 function debugLog(message, data = null) {
@@ -3639,7 +4184,7 @@ function requestLocationPermission() {
     if (!navigator.geolocation) {
         errorLog('Geolocation is not supported by this browser');
         updateLocationDisplay('Location not supported');
-        loadCampaignsWithoutLocation();
+        // Don't load campaigns here as they're already loaded with default location
         return;
     }
 
@@ -3651,24 +4196,24 @@ function requestLocationPermission() {
 
     navigator.geolocation.getCurrentPosition(
         (position) => {
+            // Update to user's actual location
             userLatitude = position.coords.latitude;
             userLongitude = position.coords.longitude;
-            successLog('Location obtained automatically', { lat: userLatitude, lng: userLongitude });
+            successLog('User location obtained', { lat: userLatitude, lng: userLongitude });
             
             // Update location display with user's current location
-            updateLocationDisplay('Your Location');
+            updateLocationDisplay('Your Current Location');
             
-            // Load location-based campaigns
-            loadLocationBasedCampaigns();
+            // Reload campaigns with user's actual location
+            performLocationBasedSearch('', '');
         },
         (error) => {
             errorLog('Location permission denied or error occurred', error.message);
             
-            // Update location display to show location not available
-            updateLocationDisplay('Set Location');
+            // Keep default Pune location, just update display
+            updateLocationDisplay('Pune, Maharashtra (Default)');
             
-            // Load campaigns without location (no distance calculation)
-            loadCampaignsWithoutLocation();
+            // No need to reload campaigns as they're already loaded with default location
         },
         options
     );
@@ -3715,13 +4260,21 @@ function performLocationBasedSearch(searchQuery = '', locationQuery = '') {
         // Show loading state
         showSearchLoading(true);
         
-        // Prepare search data
+        debugLog('Performing search', { 
+            searchQuery, 
+            locationQuery, 
+            userLat: userLatitude, 
+            userLng: userLongitude 
+        });
+        
+        // Prepare search data with text filter priority
         const searchData = {
-            search: searchQuery,
-            location: locationQuery,
+            search: searchQuery.trim(),
+            location: locationQuery.trim(),
             latitude: userLatitude || puneCoordinates.lat,
             longitude: userLongitude || puneCoordinates.lng,
             update_user_location: isUserLoggedIn,
+            text_priority: true, // Text search takes priority
             _token: getCSRFToken()
         };
         
@@ -4400,9 +4953,13 @@ function setupSearchEventListeners() {
             
             searchTimeout = setTimeout(() => {
                 console.log('🔍 Search debounce completed, performing search for:', query);
-                const locationQuery = getCurrentLocationText();
-                console.log('🔍 Current location text:', locationQuery);
-                performLocationBasedSearch(query, locationQuery);
+                
+                // Always use current location (user location or set location) for filtering
+                const currentLocation = getCurrentLocationForSearch();
+                console.log('🔍 Using current location for search:', currentLocation);
+                
+                // Prioritize location-based search first, then text filtering
+                performLocationBasedSearchWithPriority(query, currentLocation);
             }, 300); // 300ms debounce
         });
         
@@ -4410,7 +4967,10 @@ function setupSearchEventListeners() {
             if (e.key === 'Escape') {
                 console.log('🔍 Escape key pressed, clearing search');
                 this.value = '';
-                performLocationBasedSearch('', getCurrentLocationText());
+                
+                // Clear search but keep location-based filtering
+                const currentLocation = getCurrentLocationForSearch();
+                performLocationBasedSearchWithPriority('', currentLocation);
             }
         });
         
@@ -4463,6 +5023,90 @@ function getCurrentLocationText() {
     
     // Priority 3: Default to Pune coordinates
     return 'Pune, Maharashtra, IN';
+}
+
+function getCurrentLocationForSearch() {
+    // Priority 1: User's actual detected location (highest priority)
+    if (userLatitude && userLongitude) {
+        console.log('🔍 Using detected user coordinates:', { lat: userLatitude, lng: userLongitude });
+        return {
+            type: 'coordinates',
+            latitude: userLatitude,
+            longitude: userLongitude,
+            text: `Current Location (${userLatitude.toFixed(4)}, ${userLongitude.toFixed(4)})`
+        };
+    }
+    
+    // Priority 2: Manually entered location in input field
+    const locationInput = document.getElementById('locationSearchInput');
+    const inputLocation = locationInput ? locationInput.value.trim() : '';
+    if (inputLocation && inputLocation.length > 0) {
+        console.log('🔍 Using manually entered location:', inputLocation);
+        return {
+            type: 'text',
+            text: inputLocation
+        };
+    }
+    
+    // Priority 3: Default Pune location
+    console.log('🔍 Using default Pune location');
+    return {
+        type: 'coordinates',
+        latitude: puneCoordinates.lat,
+        longitude: puneCoordinates.lng,
+        text: 'Pune, Maharashtra, IN'
+    };
+}
+
+function performLocationBasedSearchWithPriority(searchQuery = '', currentLocation = null) {
+    console.log('🔍 Performing location-priority search:', { searchQuery, currentLocation });
+    
+    // Prepare search data with location priority
+    const searchData = {
+        search: searchQuery.trim(),
+        location: currentLocation ? currentLocation.text : '',
+        latitude: currentLocation && currentLocation.latitude ? currentLocation.latitude : puneCoordinates.lat,
+        longitude: currentLocation && currentLocation.longitude ? currentLocation.longitude : puneCoordinates.lng,
+        location_priority: true, // Location filtering takes priority
+        update_user_location: isUserLoggedIn,
+        _token: getCSRFToken()
+    };
+    
+    console.log('🔍 Search data with location priority:', searchData);
+    
+    // Show loading state
+    showSearchLoading(true);
+    
+    // Create cache key for this search
+    const cacheKey = `location_priority_search_${JSON.stringify(searchData)}`;
+    
+    // Make cached AJAX request
+    cachedFetch('/user/search-campaigns', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': getCSRFToken(),
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(searchData)
+    }, cacheKey)
+    .then(data => {
+        // Check if there's an error response
+        if (!data.success) {
+            if (data.error_type === 'invalid_location') {
+                handleLocationValidationError(data);
+            } else {
+                handleSearchError(new Error(data.message), searchQuery);
+            }
+            return;
+        }
+        
+        handleSearchSuccess(data, searchQuery);
+    })
+    .catch(error => {
+        console.error('Location-priority search request failed:', error);
+        handleSearchError(error, searchQuery);
+    });
 }
 // ===== LOCATION UPDATE FUNCTIONS =====
 function updateUserLocationInDatabase(latitude, longitude, address) {
@@ -4948,9 +5592,17 @@ function initializeSearchSystem() {
     console.log('🔍 Step 1: Setting up event listeners');
     setupSearchEventListeners();
     
-    // Request location permission on page load
-    console.log('🔍 Step 2: Requesting location permission');
+    // Initialize with Pune location by default
+    console.log('🔍 Step 2: Setting default location to Pune');
+    setDefaultLocation();
+    
+    // Request user location permission
+    console.log('🔍 Step 3: Requesting user location permission');
     requestLocationPermission();
+    
+    // Load initial campaigns with default location
+    console.log('🔍 Step 4: Loading initial campaigns');
+    loadInitialCampaigns();
     
     console.log('🔍 ✅ Search system initialization completed');
 }
@@ -4974,6 +5626,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load Google Maps API
     loadGoogleMaps();
+    
+    // Initialize mobile location functionality
+    setupLocationInputMobileHandler();
+    setupMobileLocationInput();
+    
+    // Add click outside handler for mobile modal
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('mobileLocationModal');
+        if (modal && modal.classList.contains('active') && e.target === modal) {
+            closeMobileLocationModal();
+        }
+    });
 });
 
 // Initialize on page load as backup
@@ -5057,6 +5721,386 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// ===== MOBILE LOCATION MODAL FUNCTIONS =====
+function isMobileDevice() {
+    return window.innerWidth <= 768;
+}
+
+function openMobileLocationModal() {
+    if (!isMobileDevice()) return;
+    
+    const modal = document.getElementById('mobileLocationModal');
+    const input = document.getElementById('mobileLocationInput');
+    
+    if (modal && input) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on the input after modal opens
+        setTimeout(() => {
+            input.focus();
+        }, 100);
+        
+        // Clear previous suggestions
+        clearMobileLocationSuggestions();
+    }
+}
+
+function closeMobileLocationModal() {
+    const modal = document.getElementById('mobileLocationModal');
+    
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Clear the mobile input
+        const input = document.getElementById('mobileLocationInput');
+        if (input) {
+            input.value = '';
+        }
+        
+        clearMobileLocationSuggestions();
+    }
+}
+
+function clearMobileLocationInput() {
+    const input = document.getElementById('mobileLocationInput');
+    const clearBtn = document.querySelector('.mobile-location-clear');
+    
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+    
+    if (clearBtn) {
+        clearBtn.style.display = 'none';
+    }
+    
+    clearMobileLocationSuggestions();
+}
+
+function clearMobileLocationSuggestions() {
+    const suggestions = document.getElementById('mobileLocationSuggestions');
+    if (suggestions) {
+        suggestions.innerHTML = '';
+    }
+}
+
+function showMobileLocationLoading(show = true) {
+    const loading = document.getElementById('mobileLocationLoading');
+    const suggestions = document.getElementById('mobileLocationSuggestions');
+    
+    if (loading) {
+        loading.style.display = show ? 'flex' : 'none';
+    }
+    
+    if (suggestions && show) {
+        suggestions.innerHTML = '';
+    }
+}
+
+function getCurrentLocation() {
+    showMobileLocationLoading(true);
+    
+    if (!navigator.geolocation) {
+        showLocationError('Geolocation is not supported by this browser');
+        showMobileLocationLoading(false);
+        return;
+    }
+
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+    };
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            userLatitude = position.coords.latitude;
+            userLongitude = position.coords.longitude;
+            
+            // Reverse geocode to get address
+            reverseGeocode(userLatitude, userLongitude);
+        },
+        (error) => {
+            showMobileLocationLoading(false);
+            let errorMessage = 'Unable to get your location';
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Location access denied. Please enable location permissions.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Location information unavailable.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Location request timed out.';
+                    break;
+            }
+            
+            showLocationError(errorMessage);
+        },
+        options
+    );
+}
+
+function reverseGeocode(lat, lng) {
+    if (!window.google || !window.google.maps) {
+        showMobileLocationLoading(false);
+        showLocationError('Google Maps not loaded. Please search manually.');
+        return;
+    }
+    
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: lat, lng: lng };
+    
+    geocoder.geocode({ location: latlng }, (results, status) => {
+        showMobileLocationLoading(false);
+        
+        if (status === 'OK' && results[0]) {
+            const address = results[0].formatted_address;
+            setSelectedLocation(address, lat, lng);
+        } else {
+            showLocationError('Unable to get address for your location');
+        }
+    });
+}
+
+function setSelectedLocation(address, lat, lng) {
+    // Update global coordinates
+    userLatitude = lat;
+    userLongitude = lng;
+    
+    // Update the main location input
+    const mainLocationInput = document.getElementById('locationSearchInput');
+    if (mainLocationInput) {
+        mainLocationInput.value = address;
+    }
+    
+    // Show location indicator
+    const locationIndicator = document.getElementById('locationActiveIndicator');
+    if (locationIndicator) {
+        locationIndicator.style.display = 'inline-block';
+        locationIndicator.title = `Location set to: ${address}`;
+    }
+    
+    // Close mobile modal
+    closeMobileLocationModal();
+    
+    // Trigger search with new location
+    const searchQuery = document.getElementById('campaignSearchMain')?.value.trim() || '';
+    performLocationBasedSearchWithCoordinates(searchQuery, address, lat, lng);
+    
+    // Show success message
+    showSuccessMessage(`Location set to: ${address}`);
+}
+
+function setupManualLocationInput() {
+    const locationInput = document.getElementById('locationSearchInput');
+    if (!locationInput) return;
+    
+    debugLog('Setting up manual location input fallback');
+    
+    // Add manual location functionality when Google Maps fails
+    locationInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const location = this.value.trim();
+            
+            if (location) {
+                // Try to geocode manually using a fallback service or just use the text
+                console.log('Manual location entered:', location);
+                
+                // Update location display
+                updateLocationDisplay(location);
+                
+                // Show location indicator
+                const locationIndicator = document.getElementById('locationActiveIndicator');
+                if (locationIndicator) {
+                    locationIndicator.style.display = 'inline-block';
+                    locationIndicator.title = `Location set to: ${location}`;
+                }
+                
+                // Perform search with manual location
+                const searchQuery = document.getElementById('campaignSearchMain')?.value.trim() || '';
+                performLocationBasedSearch(searchQuery, location);
+                
+                showSuccessMessage(`Location set to: ${location}`);
+            }
+        }
+    });
+    
+    // Add a "Set Location" button next to the input
+    const setLocationBtn = document.createElement('button');
+    setLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+    setLocationBtn.className = 'btn btn-outline-primary';
+    setLocationBtn.style.marginLeft = '8px';
+    setLocationBtn.title = 'Set this location';
+    setLocationBtn.onclick = function() {
+        const location = locationInput.value.trim();
+        if (location) {
+            // Trigger the same functionality as Enter key
+            const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            locationInput.dispatchEvent(enterEvent);
+        }
+    };
+    
+    // Insert the button next to the location input
+    if (locationInput.parentElement) {
+        locationInput.parentElement.appendChild(setLocationBtn);
+    }
+}
+
+function showLocationError(message) {
+    console.warn(message);
+    
+    // You can implement a toast notification here
+    if (typeof showNotification === 'function') {
+        showNotification(message, 'warning');
+    }
+}
+
+function showSuccessMessage(message) {
+    console.log(message);
+    
+    // You can implement a toast notification here
+    if (typeof showNotification === 'function') {
+        showNotification(message, 'success');
+    }
+}
+  
+function showSuccessMessage(message) {
+    // You can implement this to show success message
+    console.log(message);
+}
+
+function setupMobileLocationInput() {
+    const mobileInput = document.getElementById('mobileLocationInput');
+    const clearBtn = document.querySelector('.mobile-location-clear');
+    
+    if (!mobileInput) return;
+    
+    let searchTimeout;
+    
+    mobileInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        
+        // Show/hide clear button
+        if (clearBtn) {
+            clearBtn.style.display = value ? 'block' : 'none';
+        }
+        
+        // Clear previous timeout
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        
+        if (value.length >= 2) {
+            searchTimeout = setTimeout(() => {
+                searchMobileLocations(value);
+            }, 300);
+        } else {
+            clearMobileLocationSuggestions();
+        }
+    });
+    
+    mobileInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMobileLocationModal();
+        }
+    });
+}
+
+function searchMobileLocations(query) {
+    if (!window.google || !window.google.maps || !window.google.maps.places) {
+        return;
+    }
+    
+    const service = new google.maps.places.AutocompleteService();
+    
+    service.getPlacePredictions({
+        input: query,
+        componentRestrictions: { country: 'IN' },
+        types: ['geocode', 'establishment']
+    }, (predictions, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            displayMobileLocationSuggestions(predictions);
+        } else {
+            clearMobileLocationSuggestions();
+        }
+    });
+}
+
+function displayMobileLocationSuggestions(predictions) {
+    const container = document.getElementById('mobileLocationSuggestions');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    predictions.slice(0, 8).forEach(prediction => {
+        const suggestion = document.createElement('div');
+        suggestion.className = 'mobile-location-suggestion';
+        suggestion.onclick = () => selectMobileSuggestion(prediction);
+        
+        suggestion.innerHTML = `
+            <div class="mobile-location-suggestion-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="mobile-location-suggestion-content">
+                <div class="mobile-location-suggestion-title">${prediction.structured_formatting.main_text}</div>
+                <div class="mobile-location-suggestion-subtitle">${prediction.structured_formatting.secondary_text || ''}</div>
+            </div>
+        `;
+        
+        container.appendChild(suggestion);
+    });
+}
+
+function selectMobileSuggestion(prediction) {
+    showMobileLocationLoading(true);
+    
+    const service = new google.maps.places.PlacesService(document.createElement('div'));
+    
+    service.getDetails({
+        placeId: prediction.place_id,
+        fields: ['geometry', 'formatted_address', 'name']
+    }, (place, status) => {
+        showMobileLocationLoading(false);
+        
+        if (status === google.maps.places.PlacesServiceStatus.OK && place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            const address = place.formatted_address || place.name;
+            
+            setSelectedLocation(address, lat, lng);
+        } else {
+            showLocationError('Unable to get details for selected location');
+        }
+    });
+}
+
+// Setup mobile location input click handler
+function setupLocationInputMobileHandler() {
+    const locationInput = document.getElementById('locationSearchInput');
+    
+    if (locationInput) {
+        locationInput.addEventListener('focus', function(e) {
+            if (isMobileDevice()) {
+                e.preventDefault();
+                this.blur();
+                openMobileLocationModal();
+            }
+        });
+        
+        locationInput.addEventListener('click', function(e) {
+            if (isMobileDevice()) {
+                e.preventDefault();
+                openMobileLocationModal();
+            }
+        });
+    }
 }
 
 // Throttle function for scroll events

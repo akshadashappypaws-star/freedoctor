@@ -1,30 +1,8 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "@popperjs/core": "^2.11.6",
-        "autoprefixer": "^10.4.21",
-        "axios": "^1.1.2",
-        "bootstrap": "^5.2.3",
-        "laravel-vite-plugin": "^0.7.2",
-        "postcss": "^8.5.6",
-        "sass": "^1.56.1",
-        "tailwindcss": "^4.1.11",
-        "vite": "^4.0.0"
-    },
-    "dependencies": {
-        "admin-lte": "^4.0.0-rc4",
-        "bootstrap": "^5.3.7",
-        "jquery": "^3.7.1",
-        "laravel-echo": "^2.1.7",
-        "popper.js": "^1.16.1",
-        "pusher-js": "^8.4.0"
-    },
     "name": "freedoctor-web",
     "version": "1.0.0",
+    "type": "module",
+    "private": true,
     "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
     "main": "vite.config.js",
     "directories": {
@@ -32,5 +10,43 @@
     },
     "keywords": [],
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "webhook-start": "node webhook-monitor-node.js",
+        "webhook-dev": "nodemon webhook-monitor-node.js"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "autoprefixer": "^10.4.21",
+        "axios": "^1.1.2",
+        "bootstrap": "^5.3.7",
+        "laravel-vite-plugin": "^0.7.2",
+        "postcss": "^8.5.6",
+        "sass": "^1.56.1",
+        "tailwindcss": "^4.1.12",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@tailwindcss/postcss": "^4.1.12",
+        "admin-lte": "^4.0.0-rc4",
+        "animate.css": "^4.1.1",
+        "aos": "^2.3.4",
+        "body-parser": "^1.20.2",
+        "chart.js": "^4.5.0",
+        "cors": "^2.8.5",
+        "countup.js": "^2.9.0",
+        "express": "^4.18.2",
+        "hover.css": "^2.3.2",
+        "jquery": "^3.7.1",
+        "laravel-echo": "^2.1.7",
+        "nodemon": "^3.0.1",
+        "notyf": "^3.10.0",
+        "popper.js": "^1.16.1",
+        "pusher-js": "^8.4.0",
+        "sortablejs": "^1.15.6",
+        "sweetalert2": "^11.22.4",
+        "typed.js": "^2.1.0"
+    }
 }

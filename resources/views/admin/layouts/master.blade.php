@@ -6,11 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Dashboard') - FreeDoctor</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vite Assets (includes Tailwind CSS) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -169,15 +172,21 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Global CSRF token setup for AJAX requests
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        if (typeof $ !== 'undefined') {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        }
         
         // Auto-hide alerts after 5 seconds
         setTimeout(() => {
-            $('.alert, [role="alert"]').fadeOut();
+            const alerts = document.querySelectorAll('.alert, [role="alert"]');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
         }, 5000);
         
         // Smooth scrolling for anchor links
@@ -190,6 +199,22 @@
             });
         });
     </script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- FreeDoctor Global Library -->
+    <script src="{{ asset('js/freedoctor-global.js') }}"></script>
+    <script src="{{ asset('js/campaign-functions.js') }}"></script>
+    <script src="{{ asset('js/whatsapp-functions.js') }}"></script>
+    <script src="{{ asset('js/admin-functions.js') }}"></script>
+    <script src="{{ asset('js/complete-fix.js') }}"></script>
     
     @stack('scripts')
 </body>

@@ -82,13 +82,22 @@
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <a href="{{ route('admin.whatsapp.machines') }}" 
+                    <a href="{{ route('admin.whatsapp.automation') }}" 
                        class="group bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200 hover:from-blue-100 hover:to-blue-200 transition-all duration-200 text-center">
                         <div class="p-3 bg-blue-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
+                            <i class="fas fa-robot text-xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-gray-900 text-sm">Automation</h4>
+                        <p class="text-xs text-gray-600 mt-1">Automated rules & triggers</p>
+                    </a>
+
+                    <a href="{{ route('admin.whatsapp.automation.rules') }}" 
+                       class="group bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200 hover:from-purple-100 hover:to-purple-200 transition-all duration-200 text-center">
+                        <div class="p-3 bg-purple-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
                             <i class="fas fa-cogs text-xl"></i>
                         </div>
-                        <h4 class="font-semibold text-gray-900 text-sm">Machines</h4>
-                        <p class="text-xs text-gray-600 mt-1">Configure AI & workflow machines</p>
+                        <h4 class="font-semibold text-gray-900 text-sm">Rules</h4>
+                        <p class="text-xs text-gray-600 mt-1">Automation rules management</p>
                     </a>
 
                     <a href="{{ route('admin.whatsapp.conversations') }}" 
@@ -100,31 +109,13 @@
                         <p class="text-xs text-gray-600 mt-1">Monitor live conversations</p>
                     </a>
 
-                    <a href="{{ route('admin.whatsapp.analytics') }}" 
-                       class="group bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200 hover:from-purple-100 hover:to-purple-200 transition-all duration-200 text-center">
-                        <div class="p-3 bg-purple-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
-                            <i class="fas fa-chart-line text-xl"></i>
+                    <a href="{{ route('admin.whatsapp.templates') }}" 
+                       class="group bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200 hover:from-orange-100 hover:to-orange-200 transition-all duration-200 text-center">
+                        <div class="p-3 bg-orange-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
+                            <i class="fas fa-file-alt text-xl"></i>
                         </div>
-                        <h4 class="font-semibold text-gray-900 text-sm">Analytics</h4>
-                        <p class="text-xs text-gray-600 mt-1">Performance metrics & insights</p>
-                    </a>
-
-                    <a href="{{ route('admin.whatsapp.automation') }}" 
-                       class="group bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200 hover:from-red-100 hover:to-red-200 transition-all duration-200 text-center">
-                        <div class="p-3 bg-red-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
-                            <i class="fas fa-robot text-xl"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 text-sm">Automation</h4>
-                        <p class="text-xs text-gray-600 mt-1">Automated rules & triggers</p>
-                    </a>
-
-                    <a href="{{ route('admin.whatsapp.settings') }}" 
-                       class="group bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 hover:from-gray-100 hover:to-gray-200 transition-all duration-200 text-center">
-                        <div class="p-3 bg-gray-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
-                            <i class="fas fa-cog text-xl"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 text-sm">Settings</h4>
-                        <p class="text-xs text-gray-600 mt-1">System configuration</p>
+                        <h4 class="font-semibold text-gray-900 text-sm">Templates</h4>
+                        <p class="text-xs text-gray-600 mt-1">Message templates</p>
                     </a>
 
                     <a href="{{ route('admin.whatsapp.bulk-messages') }}" 
@@ -134,6 +125,15 @@
                         </div>
                         <h4 class="font-semibold text-gray-900 text-sm">Bulk Messages</h4>
                         <p class="text-xs text-gray-600 mt-1">Send campaign messages</p>
+                    </a>
+
+                    <a href="{{ route('admin.whatsapp.settings') }}" 
+                       class="group bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 hover:from-gray-100 hover:to-gray-200 transition-all duration-200 text-center">
+                        <div class="p-3 bg-gray-600 text-white rounded-lg inline-flex mb-3 group-hover:scale-110 transition-transform duration-200">
+                            <i class="fas fa-cog text-xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-gray-900 text-sm">Settings</h4>
+                        <p class="text-xs text-gray-600 mt-1">System configuration</p>
                     </a>
                 </div>
             </div>
@@ -182,8 +182,8 @@
                         <div class="text-center py-8">
                             <i class="fas fa-inbox text-gray-400 text-3xl mb-4"></i>
                             <p class="text-gray-500">No recent workflow activity</p>
-                            <a href="{{ route('admin.whatsapp.machines') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                                Configure your first workflow →
+                            <a href="{{ route('admin.whatsapp.automation') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                Configure your first automation →
                             </a>
                         </div>
                     @endif

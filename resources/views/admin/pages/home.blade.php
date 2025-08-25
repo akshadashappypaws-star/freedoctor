@@ -91,6 +91,105 @@
         </div>
     </div>
 
+    <!-- WhatsApp Management Card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- WhatsApp Management Dashboard -->
+        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white card-animate hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="window.location.href='{{ route('admin.whatsapp.dashboard') }}'">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-100 text-sm font-medium">WhatsApp Management</p>
+                    <p class="text-xl font-bold">AI-Powered Automation</p>
+                    <p class="text-green-200 text-xs mt-1">Conversations, Templates & Analytics</p>
+                </div>
+                <div class="bg-green-400 bg-opacity-30 rounded-lg p-3">
+                    <i class="fab fa-whatsapp text-3xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+                <div class="flex space-x-4">
+                    <div class="text-center">
+                        <p class="text-green-100 text-xs">Conversations</p>
+                        <p class="font-bold text-sm" id="whatsappConversations">{{ DB::table('whatsapp_conversations')->count() }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-green-100 text-xs">Templates</p>
+                        <p class="font-bold text-sm" id="whatsappTemplates">{{ DB::table('whatsapp_templates')->count() }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-green-100 text-xs">Automation</p>
+                        <p class="font-bold text-sm" id="whatsappAutomation">{{ DB::table('whatsapp_automation_rules')->count() }}</p>
+                    </div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-full px-3 py-1">
+                    <span class="text-xs font-semibold">NEW</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- WhatsApp Quick Actions -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white card-animate">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-blue-100 text-sm font-medium">Quick Actions</p>
+                    <p class="text-lg font-bold">WhatsApp Tools</p>
+                </div>
+                <div class="bg-blue-400 bg-opacity-30 rounded-lg p-3">
+                    <i class="fas fa-tools text-2xl"></i>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <a href="{{ route('admin.whatsapp.automation') }}" class="block bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot mr-3"></i>
+                        <span class="text-sm font-medium">Automation Rules</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin.whatsapp.templates') }}" class="block bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        <span class="text-sm font-medium">Message Templates</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin.whatsapp.conversations') }}" class="block bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors">
+                    <div class="flex items-center">
+                        <i class="fas fa-comments mr-3"></i>
+                        <span class="text-sm font-medium">View Conversations</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- WhatsApp System Status -->
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white card-animate">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-purple-100 text-sm font-medium">System Status</p>
+                    <p class="text-lg font-bold">WhatsApp Health</p>
+                </div>
+                <div class="bg-purple-400 bg-opacity-30 rounded-lg p-3">
+                    <i class="fas fa-heartbeat text-2xl"></i>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-purple-100 text-sm">API Status</span>
+                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Online</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-purple-100 text-sm">Active Rules</span>
+                    <span class="text-white text-sm font-bold">{{ DB::table('whatsapp_automation_rules')->where('is_active', true)->count() }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-purple-100 text-sm">Today's Messages</span>
+                    <span class="text-white text-sm font-bold">{{ DB::table('whatsapp_conversations')->whereDate('created_at', today())->count() }}</span>
+                </div>
+                <a href="{{ route('admin.whatsapp.settings') }}" class="block bg-white bg-opacity-20 rounded-lg p-2 text-center hover:bg-opacity-30 transition-colors">
+                    <span class="text-sm font-medium">Settings</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Business Opportunities & Earnings Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Business Opportunities -->

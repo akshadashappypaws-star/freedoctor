@@ -18,7 +18,11 @@ class WhatsappConversation extends Model
         'is_responded',
         'sentiment',
         'lead_status',
-        'last_interaction'
+        'last_interaction',
+        'user_behavior_id',
+        'template_id',
+        'auto_reply_id',
+        'chatgpt_prompt_id'
     ];
 
     protected $dates = [
@@ -44,5 +48,20 @@ class WhatsappConversation extends Model
     public function chatgptPrompt()
     {
         return $this->belongsTo(WhatsappChatGPTPrompt::class, 'chatgpt_prompt_id');
+    }
+
+    public function userBehavior()
+    {
+        return $this->belongsTo(WhatsappUserBehavior::class, 'user_behavior_id');
+    }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(WhatsappMessage::class, 'phone', 'phone')->latest();
+    }
+
+    public function aiAnalysis()
+    {
+        return $this->hasOne(WhatsappAiAnalysis::class, 'phone', 'phone');
     }
 }

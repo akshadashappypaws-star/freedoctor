@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('workflow_performance_metrics', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('workflow_id')->constrained('workflows')->onDelete('cascade');
-            $table->string('metric_name'); // response_time, success_rate, user_satisfaction
-            $table->decimal('metric_value', 10, 4);
-            $table->string('metric_unit')->nullable(); // ms, percentage, score
-            $table->longText('additional_data')->nullable(); // JSON for extra metric details
-            $table->date('metric_date');
-            $table->timestamps();
+        if (!Schema::hasTable('workflow_performance_metrics')) {
+            Schema::create('workflow_performance_metrics', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('workflow_id')->constrained('workflows')->onDelete('cascade');
+                $table->string('metric_name'); // response_time, success_rate, user_satisfaction
+                $table->decimal('metric_value', 10, 4);
+                $table->string('metric_unit')->nullable(); // ms, percentage, score
+                $table->longText('additional_data')->nullable(); // JSON for extra metric details
+                $table->date('metric_date');
+                $table->timestamps();
 
-            $table->index(['workflow_id', 'metric_name']);
-            $table->index(['metric_name', 'metric_date']);
-        });
+                $table->index(['workflow_id', 'metric_name']);
+                $table->index(['metric_name', 'metric_date']);
+            });
+        }
     }
 
     /**

@@ -501,6 +501,73 @@ class WhatsappCloudApiService
         
         return $parameters;
     }
+
+    public function sendTemplateMessage($phone, $templateName, $parameters = [])
+    {
+        try {
+            // Clean phone number
+            $phone = preg_replace('/[^\d+]/', '', $phone);
+            if (!str_starts_with($phone, '+')) {
+                $phone = '+' . $phone;
+            }
+
+            // Prepare template message payload
+            $payload = [
+                'messaging_product' => 'whatsapp',
+                'to' => $phone,
+                'type' => 'template',
+                'template' => [
+                    'name' => $templateName,
+                    'language' => [
+                        'code' => $this->getTemplateLanguageCode($templateName)
+                    ]
+                ]
+            ];
+
+            // Add parameters if provided
+            if (!empty($parameters)) {
+                $payload['template']['components'] = [
+                    [
+                        'type' => 'body',
+                        'parameters' => array_map(function($param) {
+                            return ['type' => 'text', 'text' => $param];
+                        }, $parameters)
+                    ]
+                ];
+            }
+
+            // Send the message
+            $response = Http::withToken($this->apiKey)
+                ->timeout(30)
+                ->post("{$this->baseUrl}/{$this->phoneNumberId}/messages", $payload);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                Log::info('Template message sent successfully', [
+                    'phone' => $phone,
+                    'template' => $templateName,
+                    'message_id' => $responseData['messages'][0]['id'] ?? null
+                ]);
+                return true;
+            } else {
+                $errorData = $response->json();
+                Log::error('Failed to send template message', [
+                    'phone' => $phone,
+                    'template' => $templateName,
+                    'error' => $errorData
+                ]);
+                return false;
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Exception sending template message', [
+                'phone' => $phone,
+                'template' => $templateName,
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
+    }
     
     /**
      * Get the correct language code for a specific template

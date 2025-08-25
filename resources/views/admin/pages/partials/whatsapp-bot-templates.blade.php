@@ -63,7 +63,7 @@
                 <h5 class="modal-title">Create New Template</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="newTemplateForm" action="{{ route('admin.whatsapp.templates.store') }}" method="POST">
+            <form id="newTemplateForm" action="{{ route('admin.whatsapp.templates') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">

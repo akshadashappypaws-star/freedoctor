@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('workflow_machine_configs', function (Blueprint $table) {
-            $table->id();
-            $table->string('machine_type'); // ai, function, datatable, template, visualization
-            $table->string('config_name');
-            $table->longText('config_json'); // Machine-specific configuration
-            $table->boolean('is_active')->default(true);
-            $table->integer('priority')->default(0); // For ordering
-            $table->string('version')->default('1.0');
-            $table->timestamps();
+        if (!Schema::hasTable('workflow_machine_configs')) {
+            Schema::create('workflow_machine_configs', function (Blueprint $table) {
+                $table->id();
+                $table->string('machine_type'); // ai, function, datatable, template, visualization
+                $table->string('config_name');
+                $table->longText('config_json'); // Machine-specific configuration
+                $table->boolean('is_active')->default(true);
+                $table->integer('priority')->default(0); // For ordering
+                $table->string('version')->default('1.0');
+                $table->timestamps();
 
-            $table->unique(['machine_type', 'config_name']);
-            $table->index(['machine_type', 'is_active']);
-        });
+                $table->unique(['machine_type', 'config_name']);
+                $table->index(['machine_type', 'is_active']);
+            });
+        }
     }
 
     /**
