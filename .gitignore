@@ -75,3 +75,7 @@ npm-debug.log*
 *.backup
 *_backup.*
 *-backup.*
+
+# Scripts with secrets
+push-to-new-repo.bat
+setup-git-repo.bat
