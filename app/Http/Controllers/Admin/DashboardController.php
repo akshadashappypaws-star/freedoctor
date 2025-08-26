@@ -37,7 +37,7 @@ class DashboardController extends Controller
     $totalDoctors = Doctor::count();
     $totalPatients = User::count();
     $totalPatientspaymnet = PatientRegistration::sum('amount');
-    $totalSponsors = DB::table('campaign_sponsors')->distinct('name')->count();
+    $totalSponsors = DB::table('campaign_sponsors')->distinct('sponsor_name')->count();
     $totalBusinessOpportunities = BusinessOrganizationRequest::count();
 
     // Admin settings
@@ -202,7 +202,7 @@ $recentPatientRegistrations = PatientRegistration::with([ 'campaign'])
             'totalCampaigns' => Campaign::count(),
             'totalDoctors' => Doctor::count(),
             'totalPatients' => $totalPatients,
-            'totalSponsors' => DB::table('campaign_sponsors')->distinct('name')->count(),
+            'totalSponsors' => DB::table('campaign_sponsors')->distinct('sponsor_name')->count(),
             'totalBusinessOpportunities' => BusinessOrganizationRequest::count(),
             'userRegistrationEarnings' => $userRegistrationEarnings,
             'doctorRegistrationEarnings' => $doctorRegistrationEarnings,
@@ -395,7 +395,7 @@ $recentPatientRegistrations = PatientRegistration::with([ 'campaign'])
         $totalCampaigns = Campaign::count();
         $totalDoctors = Doctor::count();
         $totalPatients = User::count();
-        $totalSponsors = DB::table('campaign_sponsors')->distinct('name')->count();
+        $totalSponsors = DB::table('campaign_sponsors')->distinct('sponsor_name')->count();
         $totalBusinessOpportunities = BusinessOrganizationRequest::count();
 
         // Get admin earnings

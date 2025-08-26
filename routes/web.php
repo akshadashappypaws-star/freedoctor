@@ -376,7 +376,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('password/reset', [AdminPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('password/email', [AdminPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [AdminPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [AdminPasswordController::class, 'reset'])->name('password.update');
+    Route::post('password/reset', [AdminPasswordController::class, 'reset'])->name('admin.password.update');
 });
 
 // ------------------------ DOCTORuser.profile ROUTES ------------------------
@@ -461,7 +461,7 @@ Route::prefix('doctor')->name('doctor.')->group(function () {
     Route::get('password/reset', [DoctorPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('password/email', [DoctorPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [DoctorPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [DoctorPasswordController::class, 'reset'])->name('password.update');
+    Route::post('password/reset', [DoctorPasswordController::class, 'reset'])->name('doctor.password.update');
 });
 Route::middleware(['auth:doctor'])->group(function () {
     Route::get('/doctor/notifications', [DoctorDashboardController::class, 'notifications'])->name('doctor.notifications');
@@ -738,7 +738,7 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/password/reset', [UserPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('/password/email', [UserPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('/password/reset/{token}', [UserPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/password/reset', [UserPasswordController::class, 'reset'])->name('password.update');
+    Route::post('/password/reset', [UserPasswordController::class, 'reset'])->name('user.password.reset');
 
     // Email Verification
     Route::middleware('auth:user')->group(function () {
@@ -873,7 +873,7 @@ Route::prefix('user')->name('user.')->group(function () {
         // Profile update routes
         Route::put('/profile', [UserDashboardController::class, 'updateProfile'])->name('profile.update');
         Route::put('/profile/picture', [UserDashboardController::class, 'updateProfilePicture'])->name('profile.picture.update');
-        Route::put('/password', [UserDashboardController::class, 'updatePassword'])->name('password.update');
+        Route::put('/password', [UserDashboardController::class, 'updatePassword'])->name('user.password.update');
         Route::put('/preferences', [UserDashboardController::class, 'updatePreferences'])->name('preferences.update');
         Route::delete('/account', [UserDashboardController::class, 'deleteAccount'])->name('account.delete');
     });

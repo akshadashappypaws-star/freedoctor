@@ -82,7 +82,7 @@
         <div class="stats-card-modern">
             <div class="stats-content">
                 <div class="stats-text">
-                    <p class="small text-slate-300">Gross: ₹{{ number_format($patientRegistrations->sum('amount')) }}</p>
+                    <p class="small text-slate-300">Gross: ₹{{ number_format(\App\Models\PatientPayment::sum('amount')) }}</p>
                     <p class="stats-value-modern">Net: ₹{{ number_format($finalAmount) }}</p>
                 </div>
                 <div class="stats-icon-modern">

@@ -21,6 +21,8 @@ class Patient extends Model
         'campaign_id',
         'doctor_id',
         'payment_status',
+        'payment_method',
+        'transaction_id',
         'amount',
         'registration_date',
         'status'
