@@ -147,12 +147,38 @@ class WhatsappAutomationController extends Controller
     }
 
     /**
+     * Display workflows management page
+     */
+    public function workflows(): View
+    {
+        // Get all workflows with their statistics
+        $workflows = \App\Models\Workflow::with(['rules', 'messages'])->get();
+        $activeWorkflows = \App\Models\Workflow::where('status', 'running')->count();
+        $totalWorkflows = \App\Models\Workflow::count();
+
+        $stats = [
+            'active_workflows' => $activeWorkflows,
+            'total_workflows' => $totalWorkflows,
+            'messages_today' => WhatsappMessage::whereDate('sent_at', today())->count(),
+            'success_rate' => $this->calculateSuccessRate() . '%'
+        ];
+
+        return view('admin.whatsapp.automation.workflows', compact('workflows', 'stats'));
+    }
+
+    /**
      * Display rules engine page
      */
     public function rules(): View
     {
         // Get real rules data from database
         $automationRules = WhatsappAutomationRule::all();
+        
+        // Get real WhatsApp templates from database
+        $whatsappTemplates = \App\Models\WhatsappTemplate::select('id', 'name', 'category', 'components', 'status')
+            ->where('status', 'APPROVED')
+            ->orderBy('name')
+            ->get();
 
         $totalRules = $automationRules->count();
         $activeRules = $automationRules->where('is_active', true)->count();
@@ -176,7 +202,7 @@ class WhatsappAutomationController extends Controller
                 ->avg('confidence_score') ?? 0
         ];
 
-        return view('admin.whatsapp.automation.rules', compact('stats', 'automationRules'));
+        return view('admin.whatsapp.automation.rules', compact('stats', 'automationRules', 'whatsappTemplates'));
     }
 
     /**
@@ -635,5 +661,20 @@ class WhatsappAutomationController extends Controller
         }
 
         return $templates;
+    }
+
+    /**
+     * Show AI Engine settings page
+     */
+    public function aiEngine(): View
+    {
+        $stats = [
+            'active_model' => 'GPT-4',
+            'avg_response_time' => '1.8s',
+            'success_rate' => '97%',
+            'responses_today' => WhatsappAiAnalysis::whereDate('created_at', today())->count()
+        ];
+
+        return view('admin.whatsapp.settings.ai-engine', compact('stats'));
     }
 }

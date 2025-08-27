@@ -1,4 +1,4 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
 
 @section('page_title', 'Bulk Messages')
 @section('page_subtitle', 'Send messages to multiple recipients using WhatsApp templates')
@@ -22,7 +22,7 @@
 </button>
 @endsection
 
-@section('whatsapp_content')
+@section('content')
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-lg shadow-md p-6">
@@ -237,6 +237,28 @@
         </div>
     </div>
 
+    <!-- Pending Messages Status Details -->
+    <div class="bg-white rounded-lg shadow-md mb-6" id="pending-status-container">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                Real-time Delivery Tracking
+            </h3>
+            <div id="pending-status-details" class="space-y-2">
+                <!-- Pending messages will be populated here by JavaScript -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                        <p class="text-blue-700 text-sm">
+                            This section shows real-time WhatsApp delivery status. Messages are only marked as successful 
+                            when they reach "delivered" or "read" status via WhatsApp webhooks.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bulk Message History -->
     <div class="bg-white rounded-lg shadow-md">
         <div class="p-6">
@@ -247,31 +269,99 @@
                         <tr class="text-left font-semibold">
                             <th class="px-4 py-3">Template</th>
                             <th class="px-4 py-3">Recipients</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Sent/Failed</th>
+                            <th class="px-4 py-3">WhatsApp Status</th>
+                            <th class="px-4 py-3">Delivery Progress</th>
+                            <th class="px-4 py-3">Detailed Counts</th>
                             <th class="px-4 py-3">Scheduled</th>
-                            <th class="px-4 py-3">Created At</th>
+                            <th class="px-4 py-3">Last Update</th>
                             <th class="px-4 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bulkMessages ?? [] as $message)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3">{{ $message->template->name ?? 'N/A' }}</td>
-                            <td class="px-4 py-3">{{ $message->total_recipients }}</td>
+                        <tr class="hover:bg-gray-50" data-message-id="{{ $message->id }}">
                             <td class="px-4 py-3">
+                                <div class="flex items-center">
+                                    <i class="fab fa-whatsapp text-green-500 mr-2"></i>
+                                    <span class="font-medium">{{ $message->template->name ?? 'N/A' }}</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="font-semibold">{{ $message->total_recipients }}</span>
+                            </td>
+                            <td class="px-4 py-3 status-cell">
                                 @php
-                                    $statusColors = [
-                                        'pending' => 'gray',
-                                        'processing' => 'blue',
-                                        'completed' => 'green',
-                                        'failed' => 'red'
+                                    $statusInfo = [
+                                        'pending' => ['icon' => '⏳', 'color' => 'text-yellow-600', 'label' => 'Queued for sending'],
+                                        'processing' => ['icon' => '📤', 'color' => 'text-blue-600', 'label' => 'Sending in progress'],
+                                        'completed' => ['icon' => '✅', 'color' => 'text-green-600', 'label' => 'Delivery completed'],
+                                        'failed' => ['icon' => '❌', 'color' => 'text-red-600', 'label' => 'Failed to deliver']
                                     ];
-                                    $color = $statusColors[$message->status] ?? 'gray';
+                                    $info = $statusInfo[$message->status] ?? $statusInfo['pending'];
                                 @endphp
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-{{ $color }}-100 text-{{ $color }}-800">
-                                    {{ ucfirst($message->status) }}
-                                </span>
+                                <div class="flex flex-col items-start">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-lg">{{ $info['icon'] }}</span>
+                                        <span class="text-sm font-semibold {{ $info['color'] }}">{{ $info['label'] }}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <span id="webhook-status-{{ $message->id }}">⏳ Awaiting webhook</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="delivery-progress">
+                                    @php
+                                        $sent = $message->sent_count ?? 0;
+                                        $total = $message->total_recipients;
+                                        $percentage = $total > 0 ? round(($sent / $total) * 100, 1) : 0;
+                                        $delivered = $message->delivered_count ?? 0;
+                                        $deliveryPercentage = $total > 0 ? round(($delivered / $total) * 100, 1) : 0;
+                                    @endphp
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                                        <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" 
+                                             style="width: {{ $percentage }}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span>Sent: {{ $percentage }}%</span>
+                                        <span class="text-green-600">Delivered: {{ $deliveryPercentage }}%</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 counts-cell">
+                                <div class="text-sm space-y-1">
+                                    <div class="flex justify-between">
+                                        <span>📤 Sent:</span>
+                                        <span class="font-semibold">{{ $message->sent_count ?? 0 }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>✅ Delivered:</span>
+                                        <span class="font-semibold text-green-600">{{ $message->delivered_count ?? 0 }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>👁️ Read:</span>
+                                        <span class="font-semibold text-purple-600">{{ $message->read_count ?? 0 }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>❌ Failed:</span>
+                                        <span class="font-semibold text-red-600">{{ $message->failed_count ?? 0 }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="text-sm">
+                                    {{ $message->scheduled_at ? $message->scheduled_at->format('M d, H:i') : 'Now' }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="text-sm">
+                                    <div>{{ $message->updated_at->format('M d, H:i') }}</div>
+                                    <div class="text-xs text-gray-500">
+                                        <span id="last-webhook-{{ $message->id }}">
+                                            {{ $message->last_webhook_at ? $message->last_webhook_at->diffForHumans() : 'No webhooks' }}
+                                        </span>
+                                    </div>
+                                </div>
                             </td>
                             <td class="px-4 py-3">
                                 {{ $message->sent_count }}/{{ $message->failed_count }}
@@ -1634,6 +1724,230 @@ function deleteMessage(messageId) {
         });
     }
 }
+
+// Enhanced WhatsApp Status Tracking Functions
+async function viewWhatsAppDetails(messageId) {
+    try {
+        const response = await fetch(`/admin/whatsapp/bulk-messages/${messageId}/whatsapp-details`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showWhatsAppDetailsModal(data.details);
+        } else {
+            addToConsole(`❌ [ERROR] Failed to load WhatsApp details: ${data.message}`, 'error');
+        }
+    } catch (error) {
+        addToConsole(`❌ [ERROR] Error fetching WhatsApp details: ${error.message}`, 'error');
+    }
+}
+
+function showWhatsAppDetailsModal(details) {
+    const modalHtml = `
+        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" id="whatsapp-details-modal">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">
+                            <i class="fab fa-whatsapp text-green-500 mr-2"></i>
+                            WhatsApp Delivery Details
+                        </h3>
+                        <button onclick="closeWhatsAppDetailsModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Status Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-3">
+                            <div class="flex items-center">
+                                <span class="text-2xl">📤</span>
+                                <div class="ml-2">
+                                    <div class="text-sm font-medium text-blue-700">Sent</div>
+                                    <div class="text-lg font-bold text-blue-800">${details.sent_count}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 border-l-4 border-green-400 p-3">
+                            <div class="flex items-center">
+                                <span class="text-2xl">✅</span>
+                                <div class="ml-2">
+                                    <div class="text-sm font-medium text-green-700">Delivered</div>
+                                    <div class="text-lg font-bold text-green-800">${details.delivered_count}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-3">
+                            <div class="flex items-center">
+                                <span class="text-2xl">👁️</span>
+                                <div class="ml-2">
+                                    <div class="text-sm font-medium text-purple-700">Read</div>
+                                    <div class="text-lg font-bold text-purple-800">${details.read_count}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-red-50 border-l-4 border-red-400 p-3">
+                            <div class="flex items-center">
+                                <span class="text-2xl">❌</span>
+                                <div class="ml-2">
+                                    <div class="text-sm font-medium text-red-700">Failed</div>
+                                    <div class="text-lg font-bold text-red-800">${details.failed_count}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Individual Recipient Status -->
+                    <div class="max-h-96 overflow-y-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Recipient</th>
+                                    <th class="px-4 py-2 text-left">Status</th>
+                                    <th class="px-4 py-2 text-left">Webhook Time</th>
+                                    <th class="px-4 py-2 text-left">Error</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                ${details.recipients.map(recipient => `
+                                    <tr class="${recipient.status === 'failed' ? 'bg-red-50' : recipient.status === 'delivered' || recipient.status === 'read' ? 'bg-green-50' : 'bg-gray-50'}">
+                                        <td class="px-4 py-2">${recipient.phone_number}</td>
+                                        <td class="px-4 py-2">
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(recipient.status)}">
+                                                ${getStatusIcon(recipient.status)} ${recipient.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-2">${recipient.webhook_received_at || 'Not received'}</td>
+                                        <td class="px-4 py-2 text-red-600">${recipient.error_message || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function closeWhatsAppDetailsModal() {
+    const modal = document.getElementById('whatsapp-details-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function getStatusBadgeClass(status) {
+    const classes = {
+        'sent': 'bg-blue-100 text-blue-800',
+        'delivered': 'bg-green-100 text-green-800',
+        'read': 'bg-purple-100 text-purple-800',
+        'failed': 'bg-red-100 text-red-800',
+        'pending': 'bg-yellow-100 text-yellow-800'
+    };
+    return classes[status] || 'bg-gray-100 text-gray-800';
+}
+
+function getStatusIcon(status) {
+    const icons = {
+        'sent': '📤',
+        'delivered': '✅',
+        'read': '👁️',
+        'failed': '❌',
+        'pending': '⏳'
+    };
+    return icons[status] || '⚪';
+}
+
+async function refreshMessageStatus(messageId) {
+    addToConsole('🔄 Refreshing WhatsApp webhook status...', 'info');
+    
+    try {
+        const response = await fetch(`/admin/whatsapp/bulk-messages/${messageId}/refresh-status`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            addToConsole(`✅ [SUCCESS] Status refreshed - Updated ${data.updated_count} recipients`, 'success');
+            
+            // Update the UI with new data
+            if (data.message_data) {
+                updateMessageRowWithLatestData(messageId, data.message_data);
+            }
+        } else {
+            addToConsole(`❌ [ERROR] Failed to refresh status: ${data.message}`, 'error');
+        }
+    } catch (error) {
+        addToConsole(`❌ [ERROR] Error refreshing status: ${error.message}`, 'error');
+    }
+}
+
+function updateMessageRowWithLatestData(messageId, messageData) {
+    const row = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (!row) return;
+    
+    // Update the counts cell
+    const countsCell = row.querySelector('.counts-cell');
+    if (countsCell) {
+        countsCell.innerHTML = `
+            <div class="text-sm space-y-1">
+                <div class="flex justify-between">
+                    <span>📤 Sent:</span>
+                    <span class="font-semibold">${messageData.sent_count}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>✅ Delivered:</span>
+                    <span class="font-semibold text-green-600">${messageData.delivered_count || 0}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>👁️ Read:</span>
+                    <span class="font-semibold text-purple-600">${messageData.read_count || 0}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>❌ Failed:</span>
+                    <span class="font-semibold text-red-600">${messageData.failed_count || 0}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Update webhook status
+    const webhookStatus = document.getElementById(`webhook-status-${messageId}`);
+    if (webhookStatus) {
+        if (messageData.last_webhook_at) {
+            webhookStatus.innerHTML = '📡 Webhook confirmed';
+            webhookStatus.className = 'text-xs text-green-500 mt-1';
+        }
+    }
+    
+    // Add animation to show the row was updated
+    row.style.backgroundColor = '#f0fdf4';
+    setTimeout(() => {
+        row.style.backgroundColor = '';
+    }, 2000);
+}
 </script>
 @verbatim
 <script>
@@ -2113,50 +2427,246 @@ function stopRealTimeUpdates() {
 
 async function updateRealTimeData() {
     try {
-        // Update last call indicator (but don't log it)
+        // Update last call indicator
         document.getElementById('lastApiCall').textContent = new Date().toLocaleTimeString();
         
-        const response = await fetch('/admin/whatsapp/bulk-messages/realtime-stats', {
+        const response = await fetch('/admin/whatsapp/bulk-messages/realtime-status', {
             method: 'GET',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
             }
         });
 
         if (!response.ok) {
-            // Handle specific error cases silently unless critical
-            if (response.status === 404) {
-                addToConsole('Route not found - Check route registration', 'error');
-                stopRealTimeUpdates();
-                return;
-            } else if (response.status === 401 || response.status === 403) {
-                addToConsole('Authentication error - Please refresh the page', 'error');
-                stopRealTimeUpdates();
-                return;
-            } else if (response.status === 419) {
-                addToConsole('CSRF token expired - Refreshing page...', 'warning');
-                setTimeout(() => window.location.reload(), 2000);
-                return;
-            } else if (response.status === 500) {
-                addToConsole('Server error - Check console for details', 'error');
-                return;
-            }
-            throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+            handleApiError(response.status, response.statusText);
+            return;
         }
 
         const data = await response.json();
         
         if (data.success) {
-            // Update statistics cards silently
-            updateStatisticsCards(data.stats);
+            // Update real WhatsApp delivery status tracking
+            updateWhatsAppStatusTracking(data.whatsapp_status);
             
-            // Update table data silently
-            updateTableData(data.table_data);
+            // Update statistics with real data
+            updateRealTimeStatistics(data.stats);
             
-            // Update last updated time
+            // Update message table with detailed status
+            updateMessageTableWithStatus(data.messages);
+            
+            // Update pending/partial status indicators
+            updatePendingStatusIndicators(data.pending_messages);
+            
+            // Log real status updates
+            logRealStatusUpdates(data.status_updates);
+            
             document.getElementById('lastUpdated').textContent = data.last_updated;
+        } else {
+            addToConsole(`❌ [ERROR] ${data.message}`, 'error');
+        }
+        
+    } catch (error) {
+        addToConsole(`❌ [ERROR] Failed to fetch real-time data: ${error.message}`, 'error');
+        console.error('Real-time update error:', error);
+    }
+}
+
+// Enhanced WhatsApp status tracking system
+function updateWhatsAppStatusTracking(whatsappStatus) {
+    // WhatsApp Message Lifecycle: queued -> sent -> delivered -> read -> failed
+    const statusStages = {
+        'queued': { icon: '⏳', color: 'text-yellow-600', label: 'Queued for sending' },
+        'sent': { icon: '📤', color: 'text-blue-600', label: 'Sent to WhatsApp' },
+        'delivered': { icon: '✅', color: 'text-green-600', label: 'Delivered to recipient' },
+        'read': { icon: '👁️', color: 'text-purple-600', label: 'Read by recipient' },
+        'failed': { icon: '❌', color: 'text-red-600', label: 'Failed to deliver' },
+        'rejected': { icon: '🚫', color: 'text-red-800', label: 'Rejected by WhatsApp' }
+    };
+    
+    // Update status indicators in real-time
+    Object.keys(whatsappStatus).forEach(messageId => {
+        const status = whatsappStatus[messageId];
+        const messageRow = document.querySelector(`[data-message-id="${messageId}"]`);
+        
+        if (messageRow) {
+            updateMessageRowStatus(messageRow, status, statusStages);
+        }
+    });
+}
+
+function updateMessageRowStatus(messageRow, status, statusStages) {
+    const statusCell = messageRow.querySelector('.status-cell');
+    const progressBar = messageRow.querySelector('.delivery-progress');
+    
+    if (statusCell) {
+        const stageInfo = statusStages[status.current_stage] || statusStages['queued'];
+        
+        // Update status display with detailed WhatsApp tracking
+        statusCell.innerHTML = `
+            <div class="flex flex-col items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg">${stageInfo.icon}</span>
+                    <span class="text-sm font-semibold ${stageInfo.color}">${stageInfo.label}</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                    ${status.webhook_received ? '📡 Webhook confirmed' : '⏳ Awaiting webhook'}
+                </div>
+                ${status.partial_delivery ? '<div class="text-xs text-orange-500">⚠️ Partial delivery</div>' : ''}
+            </div>
+        `;
+        
+        // Update progress bar based on delivery stages
+        if (progressBar) {
+            updateDeliveryProgressBar(progressBar, status);
+        }
+    }
+}
+
+function updateDeliveryProgressBar(progressBar, status) {
+    const stages = ['queued', 'sent', 'delivered', 'read'];
+    const currentStageIndex = stages.indexOf(status.current_stage);
+    const progressPercentage = status.current_stage === 'failed' ? 0 : 
+                              ((currentStageIndex + 1) / stages.length) * 100;
+    
+    const progressColor = status.current_stage === 'failed' ? 'bg-red-500' :
+                         status.current_stage === 'read' ? 'bg-purple-500' :
+                         status.current_stage === 'delivered' ? 'bg-green-500' :
+                         'bg-blue-500';
+    
+    progressBar.innerHTML = `
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="${progressColor} h-2.5 rounded-full transition-all duration-500" 
+                 style="width: ${progressPercentage}%"></div>
+        </div>
+        <div class="text-xs text-center mt-1">
+            ${progressPercentage.toFixed(0)}% Complete
+        </div>
+    `;
+}
+
+function updateRealTimeStatistics(stats) {
+    // Update statistics with real WhatsApp data
+    const statElements = {
+        'total-sent': stats.total_sent || 0,
+        'success-rate': `${stats.success_rate || 0}%`,
+        'pending': stats.pending_messages || 0,
+        'failed-count': stats.failed_messages || 0
+    };
+    
+    Object.keys(statElements).forEach(key => {
+        const element = document.querySelector(`[data-stat="${key}"]`);
+        if (element && element.textContent !== String(statElements[key])) {
+            // Animate the change
+            element.style.transform = 'scale(1.1)';
+            element.style.color = '#10B981';
+            element.textContent = statElements[key];
             
-            // Create content hash for change detection
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+                element.style.color = '';
+            }, 500);
+        }
+    });
+}
+
+function updateMessageTableWithStatus(messages) {
+    messages.forEach(message => {
+        const row = document.querySelector(`[data-message-id="${message.id}"]`);
+        if (!row) return;
+        
+        // Update sent/delivered/read counts in real-time
+        const countsCell = row.querySelector('.counts-cell');
+        if (countsCell) {
+            countsCell.innerHTML = `
+                <div class="text-sm">
+                    <div class="flex justify-between">
+                        <span>📤 Sent:</span><span class="font-semibold">${message.sent_count}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>✅ Delivered:</span><span class="font-semibold text-green-600">${message.delivered_count || 0}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>👁️ Read:</span><span class="font-semibold text-purple-600">${message.read_count || 0}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>❌ Failed:</span><span class="font-semibold text-red-600">${message.failed_count}</span>
+                    </div>
+                </div>
+            `;
+        }
+    });
+}
+
+function updatePendingStatusIndicators(pendingMessages) {
+    // Show detailed pending status for messages not fully delivered
+    const pendingContainer = document.getElementById('pending-status-details');
+    if (!pendingContainer || pendingMessages.length === 0) return;
+    
+    const pendingHtml = pendingMessages.map(msg => `
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-2">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h4 class="font-semibold text-yellow-800">${msg.template_name}</h4>
+                    <p class="text-yellow-700 text-sm">
+                        ${msg.total_recipients - msg.delivered_count} recipients pending delivery
+                    </p>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-yellow-600">
+                        Last webhook: ${msg.last_webhook_time || 'None'}
+                    </div>
+                    <div class="text-xs">
+                        <span class="text-blue-600">${msg.sent_count} sent</span> |
+                        <span class="text-green-600">${msg.delivered_count || 0} delivered</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    pendingContainer.innerHTML = `
+        <h4 class="font-semibold text-yellow-800 mb-2">⏳ Messages Pending Full Delivery</h4>
+        ${pendingHtml}
+    `;
+}
+
+function logRealStatusUpdates(statusUpdates) {
+    // Log real WhatsApp webhook updates in console
+    statusUpdates.forEach(update => {
+        const timestamp = new Date().toLocaleTimeString();
+        const icon = update.status === 'delivered' ? '✅' : 
+                    update.status === 'read' ? '👁️' : 
+                    update.status === 'failed' ? '❌' : '📤';
+        
+        addToConsole(`${timestamp} ${icon} [${update.status.toUpperCase()}] Message ID: ${update.message_id} - ${update.recipient}`, 
+                    update.status === 'failed' ? 'error' : 'success');
+    });
+}
+
+function handleApiError(status, statusText) {
+    const errorMessages = {
+        404: 'WhatsApp API endpoint not found - Check webhook configuration',
+        401: 'WhatsApp API authentication failed - Check API credentials', 
+        403: 'WhatsApp API access forbidden - Verify permissions',
+        419: 'Session expired - Refreshing page...',
+        429: 'WhatsApp API rate limit exceeded - Slowing down requests',
+        500: 'WhatsApp webhook server error - Check server logs'
+    };
+    
+    const message = errorMessages[status] || `API Error ${status}: ${statusText}`;
+    addToConsole(`❌ [ERROR] ${message}`, 'error');
+    
+    if (status === 419) {
+        setTimeout(() => window.location.reload(), 2000);
+    } else if (status === 429) {
+        // Slow down real-time updates if rate limited
+        if (realTimeInterval) {
+            clearInterval(realTimeInterval);
+            realTimeInterval = setInterval(updateRealTimeData, 10000); // Slow to 10 seconds
+        }
+    }
+}
             const currentHash = JSON.stringify(data.stats) + JSON.stringify(data.table_data);
             
             // Only log significant changes, not routine updates

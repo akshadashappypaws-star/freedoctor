@@ -1,4 +1,8 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/whatsapp-layout.css') }}">
+@endpush
 
 @section('title', 'Live Conversations')
 

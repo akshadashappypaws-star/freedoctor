@@ -55,6 +55,11 @@ class WhatsappConversation extends Model
         return $this->belongsTo(WhatsappUserBehavior::class, 'user_behavior_id');
     }
 
+    public function messages()
+    {
+        return $this->hasMany(WhatsappMessage::class, 'conversation_id');
+    }
+
     public function latestMessage()
     {
         return $this->hasOne(WhatsappMessage::class, 'phone', 'phone')->latest();

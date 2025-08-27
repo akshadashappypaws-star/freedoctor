@@ -217,6 +217,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Automation Rules
             Route::get('/automation', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'index'])->name('automation');
             Route::get('/automation/workflow', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'workflow'])->name('automation.workflow');
+            Route::get('/automation/workflows', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'workflows'])->name('automation.workflows');
             Route::get('/automation/rules', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'rules'])->name('automation.rules');
             Route::get('/automation/analytics', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'analytics'])->name('automation.analytics');
             Route::get('/automation/machines', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'machines'])->name('automation.machines');
@@ -263,6 +264,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             
             // Bot Settings
             Route::get('/settings', [\App\Http\Controllers\Admin\WhatsappSettingsController::class, 'index'])->name('settings');
+            Route::get('/settings/ai-engine', [\App\Http\Controllers\Admin\WhatsappAutomationController::class, 'aiEngine'])->name('settings.ai-engine');
             Route::put('/settings', [\App\Http\Controllers\Admin\WhatsappSettingsController::class, 'update'])->name('settings.update');
             Route::post('/settings/test-connection', [\App\Http\Controllers\Admin\WhatsappSettingsController::class, 'testConnection'])->name('settings.test-connection');
             Route::post('/settings/sync-templates', [\App\Http\Controllers\Admin\WhatsappSettingsController::class, 'syncTemplates'])->name('settings.sync-templates');

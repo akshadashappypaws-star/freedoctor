@@ -1,4 +1,4 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
 
 @section('title', 'Visual Workflow Builder')
 

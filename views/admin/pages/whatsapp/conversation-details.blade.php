@@ -1,8 +1,8 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
 
 @section('title', 'Conversation Details')
 
-@section('whatsapp_content')
+@section('content')
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">

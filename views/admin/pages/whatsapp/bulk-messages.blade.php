@@ -1,4 +1,4 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
 
 @section('page_title', 'Bulk Messages')
 @section('page_subtitle', 'Send messages to multiple recipients using WhatsApp templates')
@@ -22,7 +22,7 @@
 </button>
 @endsection
 
-@section('whatsapp_content')
+@section('content')
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-lg shadow-md p-6">

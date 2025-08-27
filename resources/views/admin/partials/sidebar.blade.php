@@ -203,6 +203,25 @@
                 </a>
             </li>
 
+            <!-- Workflows -->
+            <li class="nav-item whatsapp-item">
+                <a href="{{ route('admin.whatsapp.automation.workflows') }}" 
+                   class="nav-link whatsapp-nav-link {{ request()->routeIs('admin.whatsapp.automation.workflows') ? 'nav-link-active' : '' }}"
+                   data-gradient="from-purple-500 to-purple-600"
+                   title="Workflows Management">
+                    <div class="nav-icon whatsapp-nav-icon {{ request()->routeIs('admin.whatsapp.automation.workflows') ? 'nav-icon-active' : '' }}">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="nav-content">
+                        <span class="nav-text">Workflows</span>
+                        <span class="nav-description">Manage workflow automation</span>
+                    </div>
+                    @if(request()->routeIs('admin.whatsapp.automation.workflows'))
+                        <div class="active-indicator"></div>
+                    @endif
+                </a>
+            </li>
+
             <!-- Message Templates -->
             <li class="nav-item whatsapp-item">
                 <a href="{{ route('admin.whatsapp.templates') }}" 
@@ -298,46 +317,34 @@
 <style>
     .sidebar-modern {
         width: 280px;
-        background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        background: linear-gradient(180deg, #383f45 0%, #2c3136 50%, #1f2428 100%);
         color: white;
-        position: fixed;
-        top: 0;
-        left: 0;
         height: 100vh;
         display: flex;
         flex-direction: column;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1000;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         box-shadow: 
             4px 0 20px rgba(0, 0, 0, 0.3),
             inset -1px 0 0 rgba(255, 255, 255, 0.1);
-        border-right: none;
-        transform: translateX(0); /* Show sidebar by default on desktop */
+        border-right: 1px solid rgba(56, 63, 69, 0.3);
+        position: relative;
+        z-index: 100;
     }
     
-    /* Mobile: Hide sidebar by default */
+    /* Mobile responsiveness */
     @media (max-width: 767px) {
         .sidebar-modern {
+            position: absolute;
+            left: 0;
+            top: 0;
             transform: translateX(-100%);
+            z-index: 200;
         }
         
-        .sidebar-modern.-translate-x-full {
-            transform: translateX(-100%);
-        }
-        
-        .sidebar-modern:not(.-translate-x-full) {
+        .sidebar-modern.open {
             transform: translateX(0);
-        }
-    }
-    
-    /* Desktop: Always show sidebar */
-    @media (min-width: 768px) {
-        .sidebar-modern {
-            transform: translateX(0) !important;
-            position: relative;
-            height: auto;
         }
     }
     
@@ -378,7 +385,7 @@
         font-weight: 700;
         color: white;
         margin: 0;
-        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        background: linear-gradient(135deg, #888f96, #6b7280);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -396,11 +403,12 @@
         overflow-y: auto;
         padding: 1rem 0;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        scrollbar-color: rgba(136, 143, 150, 0.3) transparent;
+        max-height: calc(100vh - 200px); /* Ensure proper height calculation */
     }
     
     .navigation-section::-webkit-scrollbar {
-        width: 4px;
+        width: 5px;
     }
     
     .navigation-section::-webkit-scrollbar-track {
@@ -408,8 +416,12 @@
     }
     
     .navigation-section::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 2px;
+        background: rgba(136, 143, 150, 0.3);
+        border-radius: 3px;
+    }
+    
+    .navigation-section::-webkit-scrollbar-thumb:hover {
+        background: rgba(136, 143, 150, 0.5);
     }
     
     .nav-list {
@@ -466,11 +478,11 @@
     }
     
     .nav-link-active {
-        background: rgba(59, 130, 246, 0.15) !important;
+        background: rgba(136, 143, 150, 0.15) !important;
         color: white !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        border-color: rgba(136, 143, 150, 0.3) !important;
         box-shadow: 
-            0 4px 16px rgba(59, 130, 246, 0.2),
+            0 4px 16px rgba(136, 143, 150, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
         transform: translateX(4px);
     }
@@ -494,9 +506,9 @@
     }
     
     .nav-icon-active {
-        background: rgba(59, 130, 246, 0.3) !important;
-        color: #60a5fa !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        background: rgba(136, 143, 150, 0.3) !important;
+        color: #888f96 !important;
+        box-shadow: 0 4px 12px rgba(136, 143, 150, 0.3);
     }
     
     .nav-text {
@@ -508,9 +520,9 @@
     .active-indicator {
         width: 8px;
         height: 8px;
-        background: #60a5fa;
+        background: #888f96;
         border-radius: 50%;
-        box-shadow: 0 0 8px rgba(96, 165, 250, 0.6);
+        box-shadow: 0 0 8px rgba(136, 143, 150, 0.6);
         animation: pulse 2s infinite;
     }
     
@@ -579,14 +591,14 @@
     /* WhatsApp Manager Bot Section Styles */
     .nav-section-header {
         padding: 1rem 1.5rem 0.5rem 1.5rem;
-        border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+        border-bottom: 1px solid rgba(136, 143, 150, 0.2);
         margin-bottom: 0.5rem;
-        background: rgba(34, 197, 94, 0.05);
+        background: rgba(136, 143, 150, 0.05);
         backdrop-filter: blur(10px);
     }
     
     .nav-section-title {
-        color: #22c55e;
+        color: #888f96;
         font-size: 0.875rem;
         font-weight: 600;
         margin: 0;
@@ -599,11 +611,11 @@
     
     .nav-section-title i {
         font-size: 1rem;
-        color: #22c55e;
+        color: #888f96;
     }
     
     .whatsapp-section {
-        background: rgba(34, 197, 94, 0.02);
+        background: rgba(136, 143, 150, 0.02);
         border-radius: 0 0 12px 12px;
         margin-bottom: 1rem;
         padding-bottom: 1rem;
@@ -615,7 +627,7 @@
     
     .whatsapp-nav-link {
         background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(136, 143, 150, 0.1);
         padding: 1rem;
         border-radius: 10px;
         position: relative;
@@ -629,7 +641,7 @@
         left: 0;
         width: 3px;
         height: 100%;
-        background: linear-gradient(180deg, #22c55e, #16a34a);
+        background: linear-gradient(180deg, #888f96, #6b7280);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -640,40 +652,40 @@
     }
     
     .whatsapp-nav-link:hover {
-        background: rgba(34, 197, 94, 0.1);
-        border-color: rgba(34, 197, 94, 0.3);
+        background: rgba(136, 143, 150, 0.1);
+        border-color: rgba(136, 143, 150, 0.3);
         transform: translateX(6px);
     }
     
     .whatsapp-nav-link.nav-link-active {
-        background: rgba(34, 197, 94, 0.15) !important;
-        border-color: rgba(34, 197, 94, 0.4) !important;
+        background: rgba(136, 143, 150, 0.15) !important;
+        border-color: rgba(136, 143, 150, 0.4) !important;
         box-shadow: 
-            0 4px 16px rgba(34, 197, 94, 0.2),
+            0 4px 16px rgba(136, 143, 150, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     }
     
     .whatsapp-nav-icon {
-        background: rgba(34, 197, 94, 0.1);
-        border: 1px solid rgba(34, 197, 94, 0.2);
-        color: #22c55e;
+        background: rgba(136, 143, 150, 0.1);
+        border: 1px solid rgba(136, 143, 150, 0.2);
+        color: #888f96;
         width: 2.25rem;
         height: 2.25rem;
         border-radius: 8px;
     }
     
     .whatsapp-nav-link:hover .whatsapp-nav-icon {
-        background: rgba(34, 197, 94, 0.2);
-        border-color: rgba(34, 197, 94, 0.4);
-        color: #16a34a;
+        background: rgba(136, 143, 150, 0.2);
+        border-color: rgba(136, 143, 150, 0.4);
+        color: #6b7280;
         transform: scale(1.05);
     }
     
     .whatsapp-nav-icon.nav-icon-active {
-        background: rgba(34, 197, 94, 0.3) !important;
-        border-color: rgba(34, 197, 94, 0.5) !important;
+        background: rgba(136, 143, 150, 0.3) !important;
+        border-color: rgba(136, 143, 150, 0.5) !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        box-shadow: 0 4px 12px rgba(136, 143, 150, 0.3);
     }
     
     .nav-content {

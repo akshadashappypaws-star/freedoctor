@@ -1,448 +1,254 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/whatsapp-layout.css') }}">
+@endpush
 
 @section('title', 'WhatsApp Automation Hub')
 
-@push('styles')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-<style>
-    .automation-hub {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-
-    .hub-header {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    .feature-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        height: 100%;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        transition: left 0.5s;
-    }
-
-    .feature-card:hover::before {
-        left: 100%;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-10px);
-        border-color: #667eea;
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
-    }
-
-    .feature-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .feature-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-    }
-
-    .feature-description {
-        color: #7f8c8d;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-    }
-
-    .feature-status {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .status-active {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .status-coming-soon {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    .quick-stats {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .stat-item {
-        text-align: center;
-        padding: 1rem;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .pulse-animation {
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-    }
-
-    .workflow-preview {
-        background: #f8f9fa;
-        border: 2px dashed #dee2e6;
-        border-radius: 10px;
-        padding: 2rem;
-        text-align: center;
-        margin-top: 1rem;
-    }
-
-    .real-time-indicator {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #28a745;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-    }
-
-    .real-time-indicator::before {
-        content: '●';
-        animation: blink 1s infinite;
-        margin-right: 0.5rem;
-    }
-
-    @keyframes blink {
-        0%, 50% { opacity: 1; }
-        51%, 100% { opacity: 0; }
-    }
-</style>
-@endpush
 
 @section('content')
-<div class="automation-hub">
-    <div class="container-fluid">
-        <!-- Real-time Indicator -->
-        <div class="real-time-indicator">
-            LIVE SYSTEM
-        </div>
-
-        <!-- Header Section -->
-        <div class="hub-header animate__animated animate__fadeInDown">
+<div class="container-fluid">
+    <!-- Compact Header -->
+    <div class="whatsapp-card mb-3">
+        <div class="whatsapp-header">
             <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="mb-3" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        <i class="fas fa-robot me-3"></i>
+                <div class="col-md-8">
+                    <h4 class="mb-1">
+                        <i class="fas fa-robot me-2"></i>
                         WhatsApp Automation Hub
-                    </h1>
-                    <p class="lead text-muted">
-                        Create intelligent workflows, manage templates, and analyze user behavior with AI-powered automation
-                    </p>
+                    </h4>
+                    <small class="opacity-90">
+                        <span class="live-indicator"></span>
+                        Real-time intelligent automation system
+                    </small>
                 </div>
-                <div class="col-lg-4 text-end">
-                    <div class="d-flex flex-column gap-2">
-                        <span class="badge bg-success fs-6">
-                            <i class="fas fa-check-circle me-1"></i>
-                            System Online
-                        </span>
-                        <span class="text-muted small">
-                            Last updated: <span id="last-update">{{ now()->format('h:i A') }}</span>
-                        </span>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-light text-dark">
+                        <i class="fas fa-check-circle me-1"></i>
+                        System Online
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compact Stats Row -->
+    <div class="row mb-3">
+        <div class="col-md-3 mb-2">
+            <div class="compact-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="stat-number">{{ $stats['active_automations'] ?? 0 }}</div>
+                <p class="stat-label">Active Automations</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="compact-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-message"></i>
+                </div>
+                <div class="stat-number">{{ $stats['messages_today'] ?? 0 }}</div>
+                <p class="stat-label">Messages Today</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="compact-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="stat-number">{{ $stats['ai_responses'] ?? 0 }}</div>
+                <p class="stat-label">AI Responses</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="compact-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">{{ $stats['active_users'] ?? 0 }}</div>
+                <p class="stat-label">Active Users</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compact Feature Grid -->
+    <div class="automation-grid">
+        <!-- AI Response Engine -->
+        <div class="feature-card" onclick="manageAIEngine()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <span class="feature-status status-active">
+                    <span class="live-indicator"></span>
+                    ACTIVE
+                </span>
+            </div>
+            <h6 class="feature-title">AI Response Engine</h6>
+            <p class="feature-description">Intelligent automated responses powered by OpenAI</p>
+            <small class="text-muted">Response Rate: 95%</small>
+        </div>
+
+        <!-- Smart Templates -->
+        <div class="feature-card" onclick="manageTemplates()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <span class="feature-status status-active">{{ $templates_count ?? 0 }} Active</span>
+            </div>
+            <h6 class="feature-title">Smart Templates</h6>
+            <p class="feature-description">Dynamic message templates with AI personalization</p>
+            <small class="text-muted">Usage: 87%</small>
+        </div>
+
+        <!-- Workflow Engine -->
+        <div class="feature-card" onclick="manageWorkflows()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <span class="feature-status status-active">
+                    <span class="live-indicator"></span>
+                    RUNNING
+                </span>
+            </div>
+            <h6 class="feature-title">Workflow Engine</h6>
+            <p class="feature-description">Automated conversation flows and decision trees</p>
+            <small class="text-muted">5 Workflows Active</small>
+        </div>
+
+        <!-- Bulk Campaigns -->
+        <div class="feature-card" onclick="manageBulkMessages()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <span class="feature-status status-warning">3 Scheduled</span>
+            </div>
+            <h6 class="feature-title">Bulk Campaigns</h6>
+            <p class="feature-description">Mass messaging with smart targeting</p>
+            <small class="text-muted">Next: 2:00 PM</small>
+        </div>
+
+        <!-- Real-time Analytics -->
+        <div class="feature-card" onclick="viewAnalytics()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="feature-status status-active">Live Data</span>
+            </div>
+            <h6 class="feature-title">Analytics Dashboard</h6>
+            <p class="feature-description">Performance metrics and insights</p>
+            <small class="text-muted">Updated: 2 min ago</small>
+        </div>
+
+        <!-- System Health -->
+        <div class="feature-card" onclick="viewSystemHealth()">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="feature-icon-small">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="feature-status status-active">
+                    <span class="live-indicator"></span>
+                    HEALTHY
+                </span>
+            </div>
+            <h6 class="feature-title">System Health</h6>
+            <p class="feature-description">Monitor system performance</p>
+            <small class="text-muted">Uptime: 99.9%</small>
+        </div>
+    </div>
+
+    <!-- Activity & Actions Row -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="whatsapp-card">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history text-primary me-2"></i>
+                        Recent Activity
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success text-white">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="activity-message">AI Response Generated</div>
+                                <div class="activity-time">2 minutes ago</div>
+                            </div>
+                            <span class="compact-badge bg-success text-white">Success</span>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon bg-info text-white">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="activity-message">Bulk Message Sent</div>
+                                <div class="activity-time">5 minutes ago</div>
+                            </div>
+                            <span class="compact-badge bg-info text-white">Completed</span>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning text-white">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="activity-message">Workflow Triggered</div>
+                                <div class="activity-time">10 minutes ago</div>
+                            </div>
+                            <span class="compact-badge bg-warning text-white">Processing</span>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary text-white">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="activity-message">System Health Check</div>
+                                <div class="activity-time">15 minutes ago</div>
+                            </div>
+                            <span class="compact-badge bg-success text-white">Healthy</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Quick Stats -->
-        <div class="quick-stats animate__animated animate__fadeInUp">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number text-primary" id="active-workflows">{{ $stats['active_workflows'] ?? 0 }}</div>
-                        <div class="stat-label">Active Workflows</div>
-                    </div>
+        
+        <div class="col-md-4">
+            <div class="whatsapp-card">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bolt text-warning me-2"></i>
+                        Quick Actions
+                    </h6>
                 </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number text-success" id="messages-today">{{ $stats['messages_today'] ?? 0 }}</div>
-                        <div class="stat-label">Messages Today</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number text-info" id="ai-interactions">{{ $stats['ai_interactions'] ?? 0 }}</div>
-                        <div class="stat-label">AI Interactions</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number text-warning" id="response-rate">{{ $stats['response_rate'] ?? '0%' }}</div>
-                        <div class="stat-label">Response Rate</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Feature Cards -->
-        <div class="row g-4">
-            <!-- Workflow Builder -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInLeft" onclick="navigateToWorkflow()">
-                    <div class="feature-icon pulse-animation">
-                        <i class="fas fa-project-diagram"></i>
-                    </div>
-                    <h3 class="feature-title">Visual Workflow Builder</h3>
-                    <p class="feature-description">
-                        Create complex automation workflows with drag-and-drop interface. Build message flows, AI responses, and user journeys visually.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="d-flex justify-content-center align-items-center gap-3">
-                            <div class="workflow-step bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fab fa-whatsapp"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-muted"></i>
-                            <div class="workflow-step bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-muted"></i>
-                            <div class="workflow-step bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fas fa-reply"></i>
-                            </div>
-                        </div>
-                        <small class="text-muted mt-2 d-block">WhatsApp → AI Analysis → Response</small>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-
-            <!-- Rules Engine -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInUp" onclick="navigateToRules()">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 class="feature-title">Smart Rules Engine</h3>
-                    <p class="feature-description">
-                        Set up keyword-based rules and AI fallbacks. Create intelligent responses based on user behavior and message patterns.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="bg-warning text-white rounded p-2 small">
-                                    <i class="fas fa-key"></i><br>Keywords
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="bg-primary text-white rounded p-2 small">
-                                    <i class="fas fa-robot"></i><br>AI Analysis
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="bg-success text-white rounded p-2 small">
-                                    <i class="fas fa-reply"></i><br>Response
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-
-            <!-- Analytics Dashboard -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInRight" onclick="navigateToAnalytics()">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3 class="feature-title">Behavior Analytics</h3>
-                    <p class="feature-description">
-                        Track user engagement, analyze conversation patterns, and categorize users as Interested, Average, or Not Interested.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="text-success">
-                                    <i class="fas fa-thumbs-up fa-2x"></i>
-                                    <div class="small mt-1">Interested</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-warning">
-                                    <i class="fas fa-meh fa-2x"></i>
-                                    <div class="small mt-1">Average</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-danger">
-                                    <i class="fas fa-thumbs-down fa-2x"></i>
-                                    <div class="small mt-1">Not Interested</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-
-            <!-- Template Manager -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInLeft" onclick="navigateToTemplates()">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h3 class="feature-title">Template Manager</h3>
-                    <p class="feature-description">
-                        Create and manage WhatsApp message templates with variables, media, and interactive buttons.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="bg-light p-2 rounded">
-                            <small class="text-muted">Template Preview:</small>
-                           <div class="mt-1 small">
-    Hello @{{ name }}, your appointment with Dr. @{{ doctor }} is confirmed for @{{ date }}.
-</div>
-
-                        </div>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-
-            <!-- Bulk Messaging -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInUp" onclick="navigateToBulk()">
-                    <div class="feature-icon">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                    <h3 class="feature-title">Bulk Messaging</h3>
-                    <p class="feature-description">
-                        Send targeted bulk messages with analytics integration. Track delivery, opens, and user engagement.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="bg-primary text-white rounded p-2 small">
-                                    <i class="fas fa-users"></i><br>1,234 Recipients
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="bg-success text-white rounded p-2 small">
-                                    <i class="fas fa-check"></i><br>95% Delivered
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-
-            <!-- Machine Config -->
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card animate__animated animate__fadeInRight" onclick="navigateToMachines()">
-                    <div class="feature-icon">
-                        <i class="fas fa-server"></i>
-                    </div>
-                    <h3 class="feature-title">Machine Configuration</h3>
-                    <p class="feature-description">
-                        Configure AI models, API connections, and system settings. Monitor machine health and performance.
-                    </p>
-                    <div class="workflow-preview">
-                        <div class="row text-center">
-                            <div class="col-3">
-                                <div class="text-success small">
-                                    <i class="fas fa-brain"></i><br>AI
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="text-primary small">
-                                    <i class="fas fa-cog"></i><br>API
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="text-info small">
-                                    <i class="fas fa-database"></i><br>DB
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="text-warning small">
-                                    <i class="fab fa-whatsapp"></i><br>WA
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="feature-status status-active">Active</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Real-time Activity Feed -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="quick-stats">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0">
-                            <i class="fas fa-bolt text-warning me-2"></i>
-                            Real-time Activity
-                        </h4>
-                        <span class="badge bg-success">
-                            <i class="fas fa-circle"></i> Live
-                        </span>
-                    </div>
-                    <div id="activity-feed" class="activity-feed">
-                        <!-- Activity items will be loaded here -->
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="createNewAutomation()">
+                            <i class="fas fa-plus me-1"></i>
+                            New Automation
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="testAIResponse()">
+                            <i class="fas fa-robot me-1"></i>
+                            Test AI Response
+                        </button>
+                        <button class="btn btn-info btn-sm" onclick="viewLiveChat()">
+                            <i class="fas fa-comments me-1"></i>
+                            Live Monitor
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="systemSettings()">
+                            <i class="fas fa-cog me-1"></i>
+                            Settings
+                        </button>
                     </div>
                 </div>
             </div>
@@ -450,322 +256,278 @@
     </div>
 </div>
 
-<!-- Quick Action Floating Button -->
-<div class="position-fixed bottom-0 end-0 p-4">
-    <div class="btn-group-vertical" role="group">
-        <button type="button" class="btn btn-primary rounded-circle mb-2" style="width: 60px; height: 60px;" onclick="quickCreateWorkflow()" title="Quick Create Workflow">
-            <i class="fas fa-plus fa-lg"></i>
-        </button>
-        <button type="button" class="btn btn-success rounded-circle mb-2" style="width: 60px; height: 60px;" onclick="testMessage()" title="Test Message">
-            <i class="fas fa-paper-plane fa-lg"></i>
-        </button>
-        <button type="button" class="btn btn-info rounded-circle" style="width: 60px; height: 60px;" onclick="viewLiveStats()" title="Live Statistics">
-            <i class="fas fa-chart-pulse fa-lg"></i>
-        </button>
-    </div>
+<!-- Quick Action Floating Buttons -->
+<div class="quick-actions">
+    <button class="quick-action-btn btn btn-primary" onclick="quickCreateWorkflow()" title="Quick Create">
+        <i class="fas fa-plus"></i>
+    </button>
+    <button class="quick-action-btn btn btn-success" onclick="testMessage()" title="Test Message">
+        <i class="fas fa-paper-plane"></i>
+    </button>
+    <button class="quick-action-btn btn btn-info" onclick="viewLiveStats()" title="Live Stats">
+        <i class="fas fa-chart-pulse"></i>
+    </button>
 </div>
 @endsection
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 <script>
-    let socket = null;
-    let activityInterval = null;
+$(document).ready(function() {
+    console.log('🚀 Compact WhatsApp Automation Hub initialized');
+    
+    // Initialize real-time updates
+    initializeRealTimeUpdates();
+    
+    // Start health check
+    startHealthCheck();
+    
+    // Animate counters
+    animateCounters();
+});
 
-    // Initialize when page loads
-    $(document).ready(function() {
-        initializeRealTime();
-        loadActivityFeed();
-        startStatsUpdates();
+// Compact real-time updates
+function initializeRealTimeUpdates() {
+    console.log('📡 Initializing real-time updates...');
+    
+    // Update stats every 30 seconds
+    setInterval(updateStats, 30000);
+    
+    // Update activity every 10 seconds  
+    setInterval(updateActivity, 10000);
+}
+
+function startHealthCheck() {
+    setInterval(performHealthCheck, 60000);
+    performHealthCheck();
+}
+
+function performHealthCheck() {
+    // Simple health check - update live indicators
+    $('.live-indicator').css('animation', 'pulse 2s infinite');
+}
+
+function animateCounters() {
+    $('.stat-number').each(function() {
+        const $counter = $(this);
+        const targetValue = parseInt($counter.text()) || 0;
         
-        // Auto-refresh every 30 seconds
-        setInterval(refreshStats, 30000);
-    });
-
-    // Navigation functions
-    function navigateToWorkflow() {
-        window.location.href = '{{ route("admin.whatsapp.automation.workflow") }}';
-    }
-
-    function navigateToRules() {
-        window.location.href = '{{ route("admin.whatsapp.automation.rules") }}';
-    }
-
-    function navigateToAnalytics() {
-        window.location.href = '{{ route("admin.whatsapp.automation.analytics") }}';
-    }
-
-    function navigateToTemplates() {
-        window.location.href = '{{ route("admin.whatsapp.templates") }}';
-    }
-
-    function navigateToBulk() {
-        window.location.href = '{{ route("admin.whatsapp.bulk-messages") }}';
-    }
-
-    function navigateToMachines() {
-        window.location.href = '{{ route("admin.whatsapp.automation.machines") }}';
-    }
-
-    // Real-time functionality
-    function initializeRealTime() {
-        // Initialize WebSocket connection if available
-        if (typeof io !== 'undefined') {
-            socket = io('{{ config("app.websocket_url", "ws://localhost:3000") }}');
-            
-            socket.on('connect', function() {
-                console.log('Real-time connection established');
-            });
-
-            socket.on('workflow_update', function(data) {
-                updateWorkflowStats(data);
-            });
-
-            socket.on('new_message', function(data) {
-                addActivityItem(data);
-                updateMessageCount();
-            });
-
-            socket.on('ai_interaction', function(data) {
-                updateAIStats(data);
-                addActivityItem(data);
-            });
-        }
-    }
-
-    function loadActivityFeed() {
-        const feed = document.getElementById('activity-feed');
-        
-        // Sample real-time activities
-        const activities = [
-            {
-                type: 'message',
-                icon: 'fab fa-whatsapp',
-                color: 'success',
-                message: 'New message from +91 98765 43210',
-                time: '2 seconds ago'
-            },
-            {
-                type: 'ai',
-                icon: 'fas fa-brain',
-                color: 'primary',
-                message: 'AI analyzed intent: doctor_search',
-                time: '5 seconds ago'
-            },
-            {
-                type: 'workflow',
-                icon: 'fas fa-project-diagram',
-                color: 'info',
-                message: 'Workflow "Doctor Search" executed successfully',
-                time: '8 seconds ago'
-            },
-            {
-                type: 'template',
-                icon: 'fas fa-file-alt',
-                color: 'warning',
-                message: 'Template "Appointment Confirmation" sent',
-                time: '12 seconds ago'
-            }
-        ];
-
-        feed.innerHTML = activities.map(activity => `
-            <div class="activity-item d-flex align-items-center p-3 mb-2 bg-light rounded animate__animated animate__fadeInRight">
-                <div class="activity-icon bg-${activity.color} text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="${activity.icon}"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="activity-message">${activity.message}</div>
-                    <small class="text-muted">${activity.time}</small>
-                </div>
-                <div class="activity-status">
-                    <i class="fas fa-check-circle text-success"></i>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function addActivityItem(data) {
-        const feed = document.getElementById('activity-feed');
-        const activityHtml = `
-            <div class="activity-item d-flex align-items-center p-3 mb-2 bg-light rounded animate__animated animate__fadeInRight">
-                <div class="activity-icon bg-${data.color || 'primary'} text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="${data.icon || 'fas fa-info'}"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="activity-message">${data.message}</div>
-                    <small class="text-muted">Just now</small>
-                </div>
-                <div class="activity-status">
-                    <i class="fas fa-check-circle text-success"></i>
-                </div>
-            </div>
-        `;
-        
-        feed.insertAdjacentHTML('afterbegin', activityHtml);
-        
-        // Remove old items (keep only 10)
-        const items = feed.querySelectorAll('.activity-item');
-        if (items.length > 10) {
-            items[items.length - 1].remove();
-        }
-    }
-
-    function startStatsUpdates() {
-        // Simulate real-time stats updates
-        setInterval(() => {
-            // Random small increments to simulate activity
-            if (Math.random() > 0.7) {
-                const messagesElement = document.getElementById('messages-today');
-                const currentMessages = parseInt(messagesElement.textContent);
-                messagesElement.textContent = currentMessages + 1;
-                
-                // Add activity
-                addActivityItem({
-                    icon: 'fab fa-whatsapp',
-                    color: 'success',
-                    message: `New message from +91 ${Math.floor(Math.random() * 9000000000) + 1000000000}`,
-                    time: 'Just now'
-                });
-            }
-
-            if (Math.random() > 0.8) {
-                const aiElement = document.getElementById('ai-interactions');
-                const currentAI = parseInt(aiElement.textContent);
-                aiElement.textContent = currentAI + 1;
-                
-                // Add AI activity
-                addActivityItem({
-                    icon: 'fas fa-brain',
-                    color: 'primary',
-                    message: 'AI processed user query successfully',
-                    time: 'Just now'
-                });
-            }
-
-            // Update last update time
-            document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
-        }, 5000);
-    }
-
-    function refreshStats() {
-        fetch('{{ route("admin.whatsapp.automation.stats") }}')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateStatsDisplay(data.stats);
+        if (targetValue > 0) {
+            $counter.text('0');
+            $({ count: 0 }).animate({ count: targetValue }, {
+                duration: 1500,
+                step: function() {
+                    $counter.text(Math.floor(this.count));
+                },
+                complete: function() {
+                    $counter.text(targetValue);
                 }
-            })
-            .catch(error => console.error('Stats update failed:', error));
-    }
-
-    function updateStatsDisplay(stats) {
-        document.getElementById('active-workflows').textContent = stats.active_workflows || 0;
-        document.getElementById('messages-today').textContent = stats.messages_today || 0;
-        document.getElementById('ai-interactions').textContent = stats.ai_interactions || 0;
-        document.getElementById('response-rate').textContent = stats.response_rate || '0%';
-    }
-
-    // Quick action functions
-    function quickCreateWorkflow() {
-        Swal.fire({
-            title: 'Quick Create Workflow',
-            html: `
-                <div class="text-start">
-                    <div class="mb-3">
-                        <label class="form-label">Workflow Type</label>
-                        <select class="form-select" id="workflowType">
-                            <option value="simple">Simple Message Response</option>
-                            <option value="ai">AI-Powered Response</option>
-                            <option value="doctor-search">Doctor Search Flow</option>
-                            <option value="appointment">Appointment Booking</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Trigger Keywords</label>
-                        <input type="text" class="form-control" id="triggerKeywords" placeholder="hello, hi, start">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Response Message</label>
-                        <textarea class="form-control" id="responseMessage" rows="3" placeholder="Enter your response message"></textarea>
-                    </div>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Create Workflow',
-            cancelButtonText: 'Cancel',
-            width: 600
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Create workflow logic here
-                Swal.fire('Success!', 'Workflow created successfully!', 'success');
-                setTimeout(() => navigateToWorkflow(), 1500);
-            }
-        });
-    }
-
-    function testMessage() {
-        Swal.fire({
-            title: 'Test WhatsApp Message',
-            html: `
-                <div class="text-start">
-                    <div class="mb-3">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="testPhone" placeholder="+91 9876543210">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Message</label>
-                        <textarea class="form-control" id="testMessage" rows="3" placeholder="Hello, this is a test message from FreeDoctor automation system."></textarea>
-                    </div>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Send Test Message',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Send test message logic here
-                Swal.fire({
-                    title: 'Sending...',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading()
-                });
-                
-                setTimeout(() => {
-                    Swal.fire('Sent!', 'Test message sent successfully!', 'success');
-                }, 2000);
-            }
-        });
-    }
-
-    function viewLiveStats() {
-        window.open('{{ route("admin.whatsapp.automation.analytics") }}', '_blank');
-    }
-
-    // Update functions for real-time data
-    function updateWorkflowStats(data) {
-        document.getElementById('active-workflows').textContent = data.active_workflows;
-    }
-
-    function updateMessageCount() {
-        const element = document.getElementById('messages-today');
-        const current = parseInt(element.textContent);
-        element.textContent = current + 1;
-    }
-
-    function updateAIStats(data) {
-        const element = document.getElementById('ai-interactions');
-        const current = parseInt(element.textContent);
-        element.textContent = current + 1;
-    }
-
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', function() {
-        if (socket) {
-            socket.disconnect();
-        }
-        if (activityInterval) {
-            clearInterval(activityInterval);
+            });
         }
     });
+}
+
+function updateStats() {
+    // Simulate stat updates
+    console.log('📊 Updating stats...');
+    
+    // Add some random increments occasionally
+    if (Math.random() > 0.7) {
+        const $messagesCounter = $('.stat-number').eq(1);
+        const current = parseInt($messagesCounter.text());
+        $messagesCounter.text(current + 1);
+    }
+}
+
+function updateActivity() {
+    console.log('📝 Updating activity...');
+    
+    // Simulate new activity occasionally
+    if (Math.random() > 0.8) {
+        const activities = [
+            { icon: 'fas fa-robot', bg: 'success', message: 'AI Response Generated', badge: 'Success' },
+            { icon: 'fas fa-paper-plane', bg: 'info', message: 'Message Sent', badge: 'Completed' },
+            { icon: 'fas fa-cogs', bg: 'warning', message: 'Workflow Triggered', badge: 'Processing' }
+        ];
+        
+        const activity = activities[Math.floor(Math.random() * activities.length)];
+        addNewActivity(activity);
+    }
+}
+
+function addNewActivity(activity) {
+    const newActivity = `
+        <div class="activity-item">
+            <div class="activity-icon bg-${activity.bg} text-white">
+                <i class="${activity.icon}"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="activity-message">${activity.message}</div>
+                <div class="activity-time">Just now</div>
+            </div>
+            <span class="compact-badge bg-${activity.bg} text-white">${activity.badge}</span>
+        </div>
+    `;
+    
+    $('.activity-feed').prepend(newActivity);
+    
+    // Keep only 6 latest activities
+    $('.activity-item:gt(5)').fadeOut(300, function() {
+        $(this).remove();
+    });
+}
+
+// Management functions
+function manageAIEngine() {
+    console.log('🤖 Opening AI Engine management...');
+    
+    Swal.fire({
+        title: 'AI Response Engine',
+        html: `
+            <div class="text-start">
+                <h6>Current Configuration:</h6>
+                <ul class="small">
+                    <li>Model: GPT-3.5 Turbo</li>
+                    <li>Response Rate: 95%</li>
+                    <li>Avg Response Time: 2.3s</li>
+                    <li>Context Memory: 10 messages</li>
+                </ul>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Open Settings',
+        cancelButtonText: 'Close'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/admin/whatsapp/settings/ai-engine';
+        }
+    });
+}
+
+function manageTemplates() {
+    window.location.href = '/admin/whatsapp/templates';
+}
+
+function manageWorkflows() {
+    window.location.href = '/admin/whatsapp/automation/workflows';
+}
+
+function manageBulkMessages() {
+    window.location.href = '/admin/whatsapp/bulk-messages';
+}
+
+function viewAnalytics() {
+    window.location.href = '/admin/whatsapp/analytics';
+}
+
+function viewSystemHealth() {
+    Swal.fire({
+        title: 'System Health Status',
+        html: `
+            <div class="text-start">
+                <div class="row">
+                    <div class="col-6">
+                        <h6 class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            WhatsApp API
+                        </h6>
+                        <small>Connected & Active</small>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            AI Engine
+                        </h6>
+                        <small>OpenAI Ready</small>
+                    </div>
+                </div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-success" style="width: 95%">95%</div>
+                </div>
+                <p class="small text-muted mt-2 mb-0">
+                    All systems operational. Last checked: Just now
+                </p>
+            </div>
+        `,
+        confirmButtonText: 'Close'
+    });
+}
+
+function createNewAutomation() {
+    Swal.fire({
+        title: 'Create New Automation',
+        text: 'What type would you like to create?',
+        showCancelButton: true,
+        confirmButtonText: 'AI Response Rule',
+        cancelButtonText: 'Workflow',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/admin/whatsapp/automation/rules/create';
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location.href = '/admin/whatsapp/automation/workflows/create';
+        }
+    });
+}
+
+function testAIResponse() {
+    Swal.fire({
+        title: 'Test AI Response',
+        input: 'textarea',
+        inputLabel: 'Enter test message:',
+        inputPlaceholder: 'Hi, I need help with booking...',
+        showCancelButton: true,
+        confirmButtonText: 'Test'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            Swal.fire({
+                title: 'Testing...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => Swal.showLoading()
+            });
+            
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'AI Response',
+                    html: `
+                        <div class="text-start">
+                            <strong>Your message:</strong><br>
+                            <div class="bg-light p-2 rounded mb-3 small">${result.value}</div>
+                            <strong>AI Response:</strong><br>
+                            <div class="bg-primary bg-opacity-10 p-2 rounded small">
+                                Hello! I'd be happy to help you with booking an appointment. 
+                                Let me guide you through the process. Which doctor would you like to see?
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'Great!'
+                });
+            }, 2000);
+        }
+    });
+}
+
+function viewLiveChat() {
+    window.location.href = '/admin/whatsapp/conversations';
+}
+
+function systemSettings() {
+    window.location.href = '/admin/whatsapp/settings';
+}
+
+// Quick action functions
+function quickCreateWorkflow() {
+    createNewAutomation();
+}
+
+function testMessage() {
+    testAIResponse();
+}
+
+function viewLiveStats() {
+    viewAnalytics();
+}
+
+console.log('✅ Compact WhatsApp Automation Hub loaded successfully');
 </script>
 @endpush

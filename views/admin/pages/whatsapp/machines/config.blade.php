@@ -1,4 +1,4 @@
-@extends('admin.pages.whatsapp.layouts.whatsapp')
+@extends('admin.master')
 
 @section('page_title', ucfirst($machine) . ' Machine Configuration')
 @section('page_subtitle', 'Configure and monitor ' . ucfirst($machine) . ' machine settings')
@@ -23,7 +23,7 @@
     </div>
 @endsection
 
-@section('whatsapp_content')
+@section('content')
 <div class="space-y-6">
     <!-- Machine Overview -->
     <div class="bg-white rounded-lg shadow-lg p-6">

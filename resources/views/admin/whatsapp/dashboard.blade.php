@@ -1,5 +1,9 @@
 @extends('admin.master')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/whatsapp-layout.css') }}">
+@endpush
+
 @section('title', 'WhatsApp Dashboard')
 @section('page-title', 'WhatsApp Manager Dashboard')
 
