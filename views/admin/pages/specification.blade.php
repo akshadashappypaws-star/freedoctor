@@ -43,7 +43,7 @@
 </div>
 
 <!-- Add Modal -->
-<div id="addModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+<div id="addModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9993]">
     <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
         <h2 class="text-xl font-bold mb-4">Add New Specialty</h2>
         <form id="addSpecialtyForm">

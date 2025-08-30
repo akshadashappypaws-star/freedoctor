@@ -82,6 +82,49 @@
     <p class="mt-3">Don't have an account? <a href="{{ route('user.register') }}">Register here</a></p>
 </div>
 
+<!-- Email Verification Modal -->
+@if(session('show_verification_modal'))
+<div class="modal fade show" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="verificationModalLabel" style="display: block; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verificationModalLabel">
+                    <i class="fas fa-envelope-open-text text-primary me-2"></i>
+                    Email Verification Required
+                </h5>
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div class="verification-icon mb-3">
+                        <i class="fas fa-envelope fa-3x text-warning"></i>
+                    </div>
+                    <h6>We need to verify your email address</h6>
+                    <p class="text-muted mb-3">
+                        Your account <strong>{{ session('user_email') }}</strong> is not yet verified. 
+                        Please check your email for the verification link, or click below to send a new one.
+                    </p>
+                </div>
+                
+                <div id="resendStatus" class="alert" style="display: none;"></div>
+                
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="resendVerificationEmail()">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Send Verification Email
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Check if there's a redirect URL stored in sessionStorage
@@ -98,9 +141,88 @@ document.addEventListener('DOMContentLoaded', function() {
 function loginWithGoogle(type) {
     window.location.href = "{{ route('user.auth.google') }}";
 }
+
+// Modal Functions
+function closeModal() {
+    document.getElementById('verificationModal').style.display = 'none';
+}
+
+// Resend Verification Email
+function resendVerificationEmail() {
+    const statusDiv = document.getElementById('resendStatus');
+    const button = document.querySelector('[onclick="resendVerificationEmail()"]');
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    button.disabled = true;
+    statusDiv.style.display = 'none';
+    
+    // Get email from session
+    const email = "{{ session('user_email') }}";
+    
+    fetch("{{ route('user.resend.verification') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') || document.querySelector('input[name="_token"]').value
+        },
+        body: JSON.stringify({
+            email: email
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            statusDiv.className = 'alert alert-success';
+            statusDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + data.message;
+        } else {
+            statusDiv.className = 'alert alert-danger';
+            statusDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (data.message || 'Error sending verification email');
+        }
+        statusDiv.style.display = 'block';
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }, 3000);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        statusDiv.className = 'alert alert-danger';
+        statusDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Network error. Please try again.';
+        statusDiv.style.display = 'block';
+        
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
 </script>
 
 <style>
+/* Hide scroll bars while keeping scrollability */
+body {
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+.login-card {
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.login-card::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
 .google-login-btn {
     display: flex;
     align-items: center;
@@ -157,6 +279,84 @@ function loginWithGoogle(type) {
     padding: 0 12px;
     color: #5f6368;
     font-size: 13px;
+}
+
+/* Verification Modal Styles */
+.modal {
+    z-index: 1050;
+}
+
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.25rem;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 0.8;
+    text-shadow: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.verification-icon {
+    padding: 1rem;
+    background: rgba(255, 193, 7, 0.1);
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
 }
 </style>
 

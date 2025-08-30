@@ -12,6 +12,10 @@ class Campaign extends Model
     protected $fillable = [
         'title',
         'description',
+        'budget',
+        'target_audience',
+        'requirements',
+        'status',
         'location',
         'latitude',
         'longitude',
@@ -38,6 +42,7 @@ class Campaign extends Model
     protected $casts = [
         'specializations' => 'array',
         'images' => 'array',
+        'budget' => 'decimal:2',
         'per_refer_cost' => 'decimal:2',
         'amount' => 'decimal:2',
         'start_date' => 'date',

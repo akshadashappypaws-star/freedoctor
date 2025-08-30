@@ -42,6 +42,13 @@
       align-items: center;
       padding: 20px;
       box-sizing: border-box;
+      overflow-x: hidden;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+
+    body::-webkit-scrollbar {
+      display: none; /* WebKit */
     }
 
     /* Container */
@@ -58,7 +65,13 @@
       align-items: center;
       border: 2px solid var(--accent-color);
       overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
       position: relative;
+    }
+
+    .login-card::-webkit-scrollbar {
+      display: none; /* WebKit */
     }
 
     /* Icon */

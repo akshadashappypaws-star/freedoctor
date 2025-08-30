@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdminMessage extends Model
 {
-    protected $fillable = ['admin_id', 'message', 'type', 'read', 'data'];
+    protected $fillable = [
+        'admin_id', 
+        'to_number',
+        'message', 
+        'type', 
+        'status',
+        'read', 
+        'data'
+    ];
     
     protected $casts = [
         'read' => 'boolean',

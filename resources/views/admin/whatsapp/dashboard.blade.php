@@ -5,76 +5,83 @@
 @endpush
 
 @section('title', 'WhatsApp Dashboard')
-@section('page-title', 'WhatsApp Manager Dashboard')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header Section -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">WhatsApp Manager Dashboard</h1>
-                    <p class="mt-2 text-gray-600">Monitor and manage your WhatsApp workflow automation system</p>
-                </div>
-                <div class="flex space-x-3">
-                    <button onclick="refreshDashboard()" class="bg-white px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
-                        <i class="fas fa-sync-alt mr-2"></i>Refresh
-                    </button>
-                    <button onclick="exportReport()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                        <i class="fas fa-download mr-2"></i>Export Report
-                    </button>
+<div class="container-fluid">
+    <div class="whatsapp-content">
+        <!-- Page Title -->
+        <div class="page-title-box">
+            <h4 class="gradient-text-green">WhatsApp Manager Dashboard</h4>
+            <p style="color: #6b7280; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Monitor and manage your WhatsApp workflow automation system</p>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="whatsapp-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Quick Actions</h6>
+                        <small class="text-muted">Access frequently used features</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button onclick="refreshDashboard()" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                        <button onclick="exportReport()" class="btn btn-primary btn-sm">
+                            <i class="fas fa-download me-1"></i>Export Report
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-3 bg-blue-100 rounded-lg">
-                        <i class="fas fa-project-diagram text-blue-600 text-xl"></i>
+        <!-- Stats Grid -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="compact-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-project-diagram"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Total Workflows</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['total_workflows'] ?? 0) }}</p>
-                    </div>
+                    <div class="stat-number">{{ number_format($stats['total_workflows'] ?? 0) }}</div>
+                    <p class="stat-label">Total Workflows</p>
+                    <small style="color: #6b7280; font-size: 0.75rem;">Active automation flows</small>
                 </div>
             </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                        <i class="fas fa-comments text-green-600 text-xl"></i>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="compact-stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);">
+                        <i class="fas fa-comments"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Active Conversations</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['active_conversations'] ?? 0) }}</p>
-                    </div>
+                    <div class="stat-number">{{ number_format($stats['active_conversations'] ?? 0) }}</div>
+                    <p class="stat-label">Active Conversations</p>
+                    <small style="color: #10b981; font-size: 0.75rem;">
+                        <span class="live-indicator"></span>Live conversations
+                    </small>
                 </div>
             </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-3 bg-purple-100 rounded-lg">
-                        <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="compact-stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Success Rate</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['success_rate'] ?? 0 }}%</p>
-                    </div>
+                    <div class="stat-number">{{ $stats['success_rate'] ?? 0 }}%</div>
+                    <p class="stat-label">Success Rate</p>
+                    <small style="color: #8b5cf6; font-size: 0.75rem; font-weight: 600;">
+                        Automation efficiency
+                    </small>
                 </div>
             </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-3 bg-orange-100 rounded-lg">
-                        <i class="fas fa-file-alt text-orange-600 text-xl"></i>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="compact-stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <i class="fas fa-file-alt"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Message Templates</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['templates_count'] ?? 0) }}</p>
-                    </div>
+                    <div class="stat-number">{{ number_format($stats['templates_count'] ?? 0) }}</div>
+                    <p class="stat-label">Message Templates</p>
+                    <small style="color: #6b7280; font-size: 0.75rem;">Ready to use</small>
                 </div>
             </div>
         </div>

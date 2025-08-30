@@ -32,7 +32,7 @@ class RegisterController extends Controller
             'referred_by' => 'nullable|string|max:255', // Allow referral tracking
         ]);
 
-        // Generate unique referral ID for new user
+                // Generate referral ID for this user
         $yourReferralId = User::generateReferralId();
         
         // Check if user was referred by someone - priority order:
@@ -71,11 +71,12 @@ class RegisterController extends Controller
         }
       
         $user = User::create([
+            'name' => $request->username, // Use username as name for regular registration
             'username' => $request->username,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'status' => 1,
+            'status' => 'active',
             'your_referral_id' => $yourReferralId,
             'referred_by' => $referredBy,
             'referral_completed_at' => $referredBy ? now() : null,
@@ -127,7 +128,7 @@ class RegisterController extends Controller
 
         auth('user')->login($user);
 
-        return redirect()->route('user.verification.notice');
+        return redirect()->route('user.user.verification.notice');
     }
 
     /**
@@ -165,13 +166,14 @@ class RegisterController extends Controller
             // Create new user
             $user = User::create([
                 'name' => $googleUser->getName(),
+                'username' => $this->generateUniqueUsername($googleUser->getName()),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
                 'email_verified_at' => now(),
                 'password' => Hash::make(uniqid()), // Random password since they'll use Google
                 'avatar' => $googleUser->getAvatar(),
-                'username' => $this->generateUniqueUsername($googleUser->getName()),
-                'your_referral_id' => $this->generateReferralId(),
+                'your_referral_id' => User::generateReferralId(),
+                'status' => 'active',
             ]);
 
             Auth::guard('user')->login($user);

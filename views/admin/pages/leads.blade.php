@@ -250,7 +250,7 @@
 </div>
 
 <!-- Lead Details Modal -->
-<div id="leadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+<div id="leadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[9989] flex items-center justify-center">
     <div class="bg-slate-800 rounded-xl p-6 w-full max-w-md mx-4">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-white">Lead Details</h3>

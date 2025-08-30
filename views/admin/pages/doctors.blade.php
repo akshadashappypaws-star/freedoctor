@@ -138,7 +138,7 @@
 </div>
 
 <!-- Add/Edit Modal -->
-<div id="doctorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+<div id="doctorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9991]">
     <div class="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl max-h-screen overflow-y-auto">
         <h2 id="modalTitle" class="text-2xl font-bold mb-6">Add New Doctor</h2>
         <form id="doctorForm" enctype="multipart/form-data">

@@ -545,7 +545,7 @@
 </div>
 
 <!-- Application Modal -->
-<div id="applicationModal" class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden z-50">
+<div id="applicationModal" class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden z-[9982]">
     <div class="glass-card rounded-xl p-8 w-full max-w-md shadow-2xl mx-4">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-white">Apply to Request</h2>
@@ -574,7 +574,7 @@
 </div>
 
 <!-- Business Request Details Modal -->
-<div id="businessRequestModal" class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden z-50">
+<div id="businessRequestModal" class="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden z-[9981]">
     <div class="glass-card rounded-xl p-8 w-full max-w-2xl shadow-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-white">Business Request Details</h2>

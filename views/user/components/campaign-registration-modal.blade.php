@@ -1,5 +1,5 @@
 <!-- Registration Modal -->
-<div id="campaignRegistrationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+<div id="campaignRegistrationModal" class="fixed inset-0 bg-black bg-opacity-50 z-[9980] hidden">
     <div class="min-h-screen px-4 text-center">
         <!-- This element centers the modal -->
         <span class="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>

@@ -273,6 +273,27 @@ document.getElementById('registrationForm').addEventListener('submit', function(
 </script>
 
 <style>
+/* Hide scroll bars while keeping scrollability */
+body {
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+.login-card {
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.login-card::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
 .google-login-btn {
     display: flex;
     align-items: center;

@@ -12,9 +12,13 @@ class DoctorPayment extends Model
     protected $fillable = [
         'doctor_id',
         'amount',
+        'transaction_id',
         'payment_id',
         'order_id',
+        'payment_method',
+        'status',
         'payment_status',
+        'type',
         'payment_details',
         'payment_date',
         'receipt_number',

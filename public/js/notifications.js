@@ -362,7 +362,8 @@ class FreeDoctorNotifications {
         let retryCount = 0;
         
         const trySetupEcho = () => {
-            if (typeof window.Echo !== 'undefined' && window.Echo !== null) {
+            // Check if Echo is available and has the channel method
+            if (typeof window.Echo !== 'undefined' && window.Echo !== null && typeof window.Echo.channel === 'function') {
                 console.log(`🎯 Setting up real-time listening for ${this.userType} ${this.userId}`);
                 
                 try {

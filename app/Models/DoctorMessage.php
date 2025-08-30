@@ -7,17 +7,20 @@ class DoctorMessage extends Model
 {
     protected $fillable = [
         'doctor_id',
+        'to_number',
         'campaign_id',
         'user_id',
         'type',
         'message',
         'amount',
+        'status',
         'read',
         'data'
     ];
 
     protected $casts = [
         'read' => 'boolean',
+        'amount' => 'decimal:2',
         'data' => 'array'
     ];
 

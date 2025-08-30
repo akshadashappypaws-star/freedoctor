@@ -22,9 +22,21 @@ public function login(Request $request)
     $credentials = $request->only('email', 'password');
 
     if (Auth::guard('user')->attempt($credentials)) {
-        if (!Auth::guard('user')->user()->hasVerifiedEmail()) {
+        $user = Auth::guard('user')->user();
+        
+        if (!$user->email_verified_at) {
             Auth::guard('user')->logout();
-            return back()->with('error', 'Please verify your email first.');
+            
+            // Store user info in session for the modal
+            session([
+                'unverified_user_email' => $user->email,
+                'unverified_user_name' => $user->name,
+            ]);
+            
+            return back()
+                ->with('error', 'Please verify your email first.')
+                ->with('show_verification_modal', true)
+                ->with('user_email', $user->email);
         }
 
         // Success message to show after login
@@ -47,6 +59,29 @@ public function login(Request $request)
     }
 
     return back()->with('error', 'Invalid credentials.');
+}
+
+public function resendVerificationEmail(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email'
+    ]);
+
+    $user = \App\Models\User::where('email', $request->email)->first();
+
+    if ($user && !$user->email_verified_at) {
+        $user->sendEmailVerificationNotification();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Verification email sent successfully! Please check your inbox.'
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'User is already verified or email not found.'
+    ], 400);
 }
 
 

@@ -9,13 +9,21 @@ class OrganicLead extends Model
 {
     use HasFactory;
 
-    protected $table = 'organiclead';
+    protected $table = 'organic_leads';
 
     protected $fillable = [
         'name',
-        'mobile',
-        'location',
-        'category',
+        'phone',
+        'email',
+        'source',
+        'lead_type',
+        'message',
+        'status',
+        'metadata',
+    ];
+
+    protected $casts = [
+        'metadata' => 'array',
     ];
 
     protected $dates = [

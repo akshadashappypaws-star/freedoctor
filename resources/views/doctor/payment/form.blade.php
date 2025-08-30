@@ -3,160 +3,167 @@
 @section('title', 'Doctor Registration Payment')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full">
-        <!-- Payment Header -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mb-4">
-                <i class="fas fa-user-md text-3xl text-white"></i>
-            </div>
-            <h1 class="text-4xl font-bold text-white mb-2">Complete Your Registration</h1>
-            <p class="text-gray-300 text-lg">One-time payment to activate your doctor account</p>
-        </div>
-
-        <!-- Payment Card -->
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Doctor Info Section -->
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-                <div class="flex items-center space-x-4">
-                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user-md text-2xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold">{{ $doctor->doctor_name }}</h2>
-                        <p class="text-blue-100">{{ $doctor->email }}</p>
-                        <p class="text-blue-100 text-sm">{{ $doctor->phone ?? 'Phone not provided' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payment Details -->
-            <div class="p-8">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Payment Benefits -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Registration Benefits</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start space-x-3">
-                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-check text-green-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Verified Profile</h4>
-                                    <p class="text-gray-600 text-sm">Get a verified badge on your profile to build patient trust</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-bullhorn text-green-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Create Medical Camps</h4>
-                                    <p class="text-gray-600 text-sm">Organize and manage free medical camps in your area</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-users text-green-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Patient Management</h4>
-                                    <p class="text-gray-600 text-sm">Access patient registration data and manage appointments</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-chart-line text-green-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Analytics Dashboard</h4>
-                                    <p class="text-gray-600 text-sm">Track your impact and campaign performance</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-support text-green-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Priority Support</h4>
-                                    <p class="text-gray-600 text-sm">Get dedicated support for your campaigns and technical issues</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Payment Form -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Payment Details</h3>
-                        
-                        <!-- Amount Display -->
-                        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 mb-6 border border-green-200">
-                            <div class="text-center">
-                                <p class="text-gray-600 mb-2">Registration Fee</p>
-                                <div class="text-4xl font-bold text-green-600 mb-2">₹{{ number_format($subscriptionFee, 2) }}</div>
-                                <p class="text-sm text-gray-500">One-time payment • Lifetime access</p>
-                            </div>
-                        </div>
-
-                        <!-- Payment Form -->
-                        <form action="{{ route('doctor.payment.create', $doctor->id) }}" method="POST" id="paymentForm">
-                            @csrf
-                            <input type="hidden" name="amount" value="{{ $subscriptionFee }}">
-                            
-                            <div class="space-y-4">
-                                <!-- Terms and Conditions -->
-                                <div class="flex items-start space-x-3">
-                                    <input type="checkbox" id="terms" name="terms" required
-                                           class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                    <label for="terms" class="text-sm text-gray-600">
-                                        I agree to the <a href="#" class="text-blue-600 hover:underline">Terms and Conditions</a> 
-                                        and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
-                                    </label>
-                                </div>
-
-                                <!-- Payment Button -->
-                                <button type="submit" 
-                                        class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                                    <i class="fas fa-shield-alt mr-2"></i>
-                                    Proceed to Secure Payment
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Security Info -->
-                        <div class="mt-6 text-center">
-                            <div class="flex items-center justify-center space-x-4 text-gray-500 text-sm">
-                                <div class="flex items-center">
-                                    <i class="fas fa-lock mr-1"></i>
-                                    <span>256-bit SSL</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-shield-alt mr-1"></i>
-                                    <span>Razorpay Secured</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Info -->
-        <div class="mt-8 text-center">
-            <p class="text-gray-300 text-sm">
-                Questions about payment? <a href="mailto:support@freedoctor.com" class="text-blue-400 hover:underline">Contact Support</a>
-            </p>
-        </div>
-    </div>
+<!-- Back Arrow Button - Fixed Top Left for App Launch -->
+<div class="back-arrow-container">
+    <a href="{{ route('doctor.login') }}" class="back-arrow-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+        </svg>
+        Back to Login
+    </a>
 </div>
 
-<style>
-    .bg-gradient-to-br {
-        background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #3730a3 100%);
-    }
-</style>
+<div class="login-card" role="main" aria-label="Doctor Payment Form">
+    <!-- Logo Section -->
+    <div class="logo-section" style="text-align: center; margin-bottom: 25px;">
+        <img src="{{ asset('storage/PngVectordeisgn.png') }}" alt="FreeDoctor Logo" style="height: 70px; width: auto; margin-bottom: 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));" />
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <h2 style="color: #667eea; margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                FreeDoctor
+            </h2>
+        </div>
+    </div>
+    
+    <h1 class="title">Complete Your Registration</h1>
+    <p class="subtitle">One-time payment to activate your doctor account</p>
+
+    <div class="tabs" role="tablist" aria-label="Doctor Payment">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="payment-panel" id="payment-tab" tabindex="0">Registration Payment</button>
+    </div>
+
+    <!-- Doctor Info Section -->
+    <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 20px; margin-bottom: 25px; color: white;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user-md" style="font-size: 20px;"></i>
+            </div>
+            <div>
+                <h3 style="margin: 0; font-size: 18px; font-weight: 600;">{{ $doctor->doctor_name }}</h3>
+                <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">{{ $doctor->email }}</p>
+                @if($doctor->phone)
+                <p style="margin: 2px 0 0 0; opacity: 0.8; font-size: 13px;">{{ $doctor->phone }}</p>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Benefits -->
+    <div style="margin-bottom: 25px;">
+        <h3 style="color: #333; font-size: 16px; font-weight: 600; margin-bottom: 15px;">Registration Benefits:</h3>
+        <div style="display: grid; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-check" style="color: #28a745; font-size: 10px;"></i>
+                </div>
+                <span style="font-size: 14px; color: #555;">Verified Profile Badge</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-bullhorn" style="color: #28a745; font-size: 10px;"></i>
+                </div>
+                <span style="font-size: 14px; color: #555;">Create Medical Camps</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-users" style="color: #28a745; font-size: 10px;"></i>
+                </div>
+                <span style="font-size: 14px; color: #555;">Patient Management System</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-chart-line" style="color: #28a745; font-size: 10px;"></i>
+                </div>
+                <span style="font-size: 14px; color: #555;">Analytics Dashboard</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amount Display -->
+    <div style="background: linear-gradient(135deg, #e8f5e8, #f0f8f0); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 25px; border: 1px solid #d4edda;">
+        <p style="margin: 0 0 5px 0; color: #666; font-size: 14px;">Registration Fee</p>
+        <div style="font-size: 28px; font-weight: bold; color: #28a745; margin-bottom: 5px;">₹{{ number_format($subscriptionFee, 2) }}</div>
+        <p style="margin: 0; font-size: 12px; color: #666;">One-time payment • Lifetime access</p>
+    </div>
+
+    <!-- Payment Form -->
+    <form method="POST" action="{{ route('doctor.payment.create', $doctor->id) }}" id="paymentForm">
+        @csrf
+        <input type="hidden" name="amount" value="{{ $subscriptionFee }}">
+        
+        <!-- Display Error Messages -->
+        @if($errors->any())
+            <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <div style="font-weight: 600; margin-bottom: 8px;">
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                    Please fix the following errors:
+                </div>
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach($errors->all() as $error)
+                        <li style="margin-bottom: 4px;">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Display Session Error Messages -->
+        @if(session('error'))
+            <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <div style="font-weight: 600; margin-bottom: 8px;">
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                    Error:
+                </div>
+                <p style="margin: 0; font-size: 14px;">{{ session('error') }}</p>
+            </div>
+        @endif
+
+        <!-- Display Success Messages -->
+        @if(session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <div style="font-weight: 600; margin-bottom: 8px;">
+                    <i class="fas fa-check-circle" style="margin-right: 6px;"></i>
+                    Success:
+                </div>
+                <p style="margin: 0; font-size: 14px;">{{ session('success') }}</p>
+            </div>
+        @endif
+        
+        <!-- Terms and Conditions -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #555; cursor: pointer;">
+                <input type="checkbox" name="terms" required style="margin-top: 2px;">
+                <span>I agree to the <a href="#" style="color: #667eea;">Terms and Conditions</a> and <a href="#" style="color: #667eea;">Privacy Policy</a></span>
+            </label>
+        </div>
+
+        <!-- Payment Button -->
+        <div class="row">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #28a745, #20c997); border: none; padding: 12px; font-weight: 600; font-size: 16px;">
+                    <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>
+                    Proceed to Secure Payment
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Security Info -->
+    <div style="text-align: center; margin-top: 20px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; color: #666; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-lock"></i>
+                <span>256-bit SSL</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-shield-alt"></i>
+                <span>Razorpay Secured</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Link -->
+    <p style="text-align: center; margin-top: 20px; font-size: 13px; color: #666;">
+        Questions about payment? <a href="mailto:support@freedoctor.com" style="color: #667eea;">Contact Support</a>
+    </p>
+</div>
 @endsection

@@ -23,10 +23,16 @@ class Doctor extends Authenticatable implements MustVerifyEmail
         'gender',
         'specialty_id',
         'hospital_name',
+        'license_number',
+        'specialization',
+        'qualification',
+        'consultation_fee',
         'experience',
         'description',
         'intro_video',
         'image',
+        'bio',
+        'profile_photo',
         'password',
         'email_verified_at',
         'status',
@@ -38,6 +44,10 @@ class Doctor extends Authenticatable implements MustVerifyEmail
         'ifsc_code',
         'account_holder_name',
         'withdrawn_amount',
+        'documents',
+        'latitude',
+        'longitude',
+        'address',
     ];
 
     protected $hidden = [

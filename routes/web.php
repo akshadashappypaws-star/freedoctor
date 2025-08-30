@@ -463,7 +463,7 @@ Route::prefix('doctor')->name('doctor.')->group(function () {
     Route::get('password/reset', [DoctorPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('password/email', [DoctorPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [DoctorPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [DoctorPasswordController::class, 'reset'])->name('doctor.password.update');
+    Route::post('password/reset', [DoctorPasswordController::class, 'reset'])->name('password.update');
 });
 Route::middleware(['auth:doctor'])->group(function () {
     Route::get('/doctor/notifications', [DoctorDashboardController::class, 'notifications'])->name('doctor.notifications');
@@ -727,6 +727,9 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/login', [UserLoginController::class, 'showLoginForm'])->name('login')->middleware('check.cross.auth:user');
     Route::post('/login', [UserLoginController::class, 'login']);
     Route::post('/logout', [UserLoginController::class, 'logout'])->name('logout');
+    
+    // Resend verification email from login
+    Route::post('/resend-verification', [UserLoginController::class, 'resendVerificationEmail'])->name('resend.verification');
 
     // Register
     Route::get('/register', [UserRegisterController::class, 'showRegistrationForm'])->name('register');
@@ -745,9 +748,11 @@ Route::prefix('user')->name('user.')->group(function () {
     // Email Verification
     Route::middleware('auth:user')->group(function () {
         Route::get('/email/verify', [UserEmailVerificationController::class, 'notice'])->name('verification.notice');
-        Route::get('/email/verify/{id}/{hash}', [UserEmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
         Route::post('/email/verification-notification', [UserEmailVerificationController::class, 'send'])->middleware('throttle:6,1')->name('verification.send');
     });
+    
+    // Public email verification (no auth required)
+    Route::get('/email/verify/{id}/{hash}', [UserEmailVerificationController::class, 'verify'])->name('verification.verify');
 
     // Public Dashboard and Pages (accessible without login)
     Route::get('/home', [UserDashboardController::class, 'home'])->name('home');

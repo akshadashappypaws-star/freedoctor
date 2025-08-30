@@ -8,8 +8,11 @@ class UserMessage extends Model
 {
     protected $fillable = [
         'user_id', 
+        'phone',
         'message', 
         'type', 
+        'status',
+        'metadata',
         'read',
         'is_read',
         'data'
@@ -18,7 +21,8 @@ class UserMessage extends Model
     protected $casts = [
         'read' => 'boolean',
         'is_read' => 'boolean',
-        'data' => 'array'
+        'data' => 'array',
+        'metadata' => 'array'
     ];
     
     public function user() {

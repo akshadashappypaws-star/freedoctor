@@ -11,24 +11,27 @@ class PatientRegistration extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
+        'campaign_id',
         'patient_name',
-        'email',
         'phone_number',
+        'name',
+        'phone',
+        'email',
         'age',
         'gender',
+        'medical_history',
+        'emergency_contact',
         'address',
-        'campaign_id',
         'description',
+        'registration_reason',
         'status',
         'amount',
         'payment_status',
+        'payment_method',
+        'transaction_id',
         'payment_id',
         'payment_date',
-        'payment_amount',
-        'medical_history',
-        'registration_reason',
-        'emergency_contact'
+        'payment_amount'
     ];
 
     public function campaign()

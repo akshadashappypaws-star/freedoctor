@@ -17,7 +17,11 @@ class CampaignReferral extends Model
         'referral_code',
         'registration_completed_at',
         'status',
-        'notes'
+        'notes',
+        // Legacy phone-based columns for backward compatibility
+        'referrer_phone',
+        'referee_phone', 
+        'commission'
     ];
     
     protected $casts = [

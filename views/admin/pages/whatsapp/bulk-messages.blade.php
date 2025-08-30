@@ -344,7 +344,7 @@
 </div>
 
 <!-- New Message Modal -->
-<div id="newMessageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+<div id="newMessageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[9988]">
     <div class="flex items-center justify-center min-h-screen px-4 py-8">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-hidden">
             <div class="flex flex-col h-full max-h-screen">
@@ -499,7 +499,7 @@
 </div>
 
 <!-- Smart Recipients Modal -->
-<div id="smartRecipientsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden" style="z-index: 9999;">
+<div id="smartRecipientsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden" style="z-index: 9987;">
     <div class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl">
             <div class="p-6">
@@ -575,7 +575,7 @@
 </div>
 
 <!-- Analytics Modal -->
-<div id="analyticsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden" style="z-index: 9998;">
+<div id="analyticsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden" style="z-index: 9986;">
     <div class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
             <div class="p-6">

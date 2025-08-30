@@ -445,7 +445,7 @@
 </div>
 
 <!-- Add/Edit Modal -->
-<div id="campaignModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+<div id="campaignModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9999]">
     <div class="bg-slate-800 border border-slate-600 rounded-lg p-6 w-full max-w-2xl shadow-xl max-h-screen overflow-y-auto">
         <h2 id="modalTitle" class="text-2xl font-bold mb-6 text-white">Add New Campaign</h2>
         <form id="campaignForm" enctype="multipart/form-data">
@@ -797,7 +797,7 @@
 </div>
 
 <!-- Patient Registration Modal -->
-<div id="patientRegistrationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+<div id="patientRegistrationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9998]">
     <div class="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <!-- Modal Header -->
         <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-slate-700 pb-4">

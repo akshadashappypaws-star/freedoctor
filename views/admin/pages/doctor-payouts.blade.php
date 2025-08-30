@@ -286,7 +286,7 @@
 </div>
 
 <!-- Doctor Payout Processing Modal -->
-<div id="processDoctorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+<div id="processDoctorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-[9990]">
     <div class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div class="flex items-center justify-between mb-4">

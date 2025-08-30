@@ -10,7 +10,7 @@ class UserVerifyEmail extends VerifyEmail
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'user.verification.verify',  // 👈 this matches your custom user route
+            'user.verification.verify',  // 👈 this matches the route name within the user group
             Carbon::now()->addMinutes(60),
             [
                 'id' => $notifiable->getKey(),

@@ -462,9 +462,9 @@ function createNewAutomation() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/admin/whatsapp/automation/rules/create';
+            window.location.href = '/admin/whatsapp/automation/rules';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            window.location.href = '/admin/whatsapp/automation/workflows/create';
+            window.location.href = '/admin/whatsapp/automation/workflows';
         }
     });
 }

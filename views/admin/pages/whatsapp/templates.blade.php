@@ -271,7 +271,7 @@
 </div>
 
 <!-- Link Template Modal -->
-<div id="linkModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+<div id="linkModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[9985]">
     <div class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
             <div class="p-6">

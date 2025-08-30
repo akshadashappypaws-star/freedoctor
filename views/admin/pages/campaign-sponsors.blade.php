@@ -264,7 +264,7 @@ $commissionPercent = DB::table('admin_settings')
 </div>
 
 <!-- Sponsor Detail Modal -->
-<div id="sponsorDetailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+<div id="sponsorDetailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9995]">
     <div class="bg-white rounded-lg p-6 w-full max-w-3xl shadow-xl max-h-screen overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">

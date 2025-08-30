@@ -17,6 +17,9 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
@@ -160,6 +163,55 @@
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Pusher JS -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    
+    <!-- Laravel Echo -->
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.0/dist/echo.iife.js"></script>
+
+    <script>
+        // Initialize Echo for real-time notifications
+        window.Pusher = Pusher;
+        
+        try {
+            window.Echo = new Echo({
+                broadcaster: 'pusher',
+                key: '{{ config("broadcasting.connections.pusher.key") }}',
+                cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
+                forceTLS: true,
+                encrypted: true
+            });
+            
+            console.log('✅ Echo initialized successfully');
+        } catch (error) {
+            console.warn('⚠️ Echo initialization failed:', error);
+            // Create a fallback Echo object to prevent errors
+            window.Echo = {
+                channel: function(channelName) {
+                    console.warn('Echo fallback: channel method called for', channelName);
+                    return {
+                        listen: function(event, callback) {
+                            console.warn('Echo fallback: listen method called for', event);
+                            return this;
+                        }
+                    };
+                },
+                private: function(channelName) {
+                    console.warn('Echo fallback: private method called for', channelName);
+                    return {
+                        listen: function(event, callback) {
+                            console.warn('Echo fallback: listen method called for', event);
+                            return this;
+                        }
+                    };
+                }
+            };
+        }
+    </script>
 
     @stack('scripts')
     @yield('scripts')

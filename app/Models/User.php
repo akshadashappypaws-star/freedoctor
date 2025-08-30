@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'razorpay_contact_id', 'razorpay_fund_account_id', 'total_earnings', 'withdrawn_amount', 'available_balance',
         'gender', 'address', 'date_of_birth', 'emergency_contact_name', 'emergency_contact_phone',
         'latitude', 'longitude', 'location_address', 'location_source', 'location_updated_at', 'location_permission_granted', 'ip_address',
-        'google_id', 'avatar', 'email_verified_at'
+        'google_id', 'avatar', 'profile_picture', 'email_verified_at'
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -38,14 +38,16 @@ public function sendPasswordResetNotification($token)
 
 public function sendEmailVerificationNotification()
 {
-    $verificationUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute(
-        'user.verification.verify',
-        \Illuminate\Support\Carbon::now()->addMinutes(60),
-        [
-            'id' => $this->getKey(),
-            'hash' => sha1($this->getEmailForVerification()),
-        ]
-    );
+    // Force the correct URL for development
+    $baseUrl = config('app.url');
+    
+    // Use development URL if we're in local environment
+    if (app()->environment('local')) {
+        $baseUrl = 'http://127.0.0.1:8000';
+    }
+    
+    // Generate simple verification URL (not signed)
+    $verificationUrl = $baseUrl . '/user/email/verify/' . $this->getKey() . '/' . sha1($this->getEmailForVerification());
     
     \Illuminate\Support\Facades\Mail::to($this->email)->send(
         new \App\Mail\EmailVerification($this, $verificationUrl)

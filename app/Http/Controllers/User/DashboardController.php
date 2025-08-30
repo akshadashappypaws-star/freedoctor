@@ -679,7 +679,10 @@ class DashboardController extends Controller
             return view('user.partials.campaigns-list', compact('campaigns'))->render();
         }
             
-        return view('user.pages.campaigns', compact('campaigns', 'specialties', 'doctors'));
+        // Add empty campaign variable for compatibility
+        $campaign = null;
+        
+        return view('user.pages.campaigns', compact('campaigns', 'specialties', 'doctors', 'campaign'));
     }
 
     /**

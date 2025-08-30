@@ -12,19 +12,19 @@
             </div>
             <div class="user-info">
                 <h3 class="user-name">
-                    {{ auth('user')->user()->username ?? 'User' }}
+                    {{ auth('user')->user()->name ?? auth('user')->user()->username ?? 'User' }}
                 </h3>
                 
                 <div class="user-id">
                     <i class="fas fa-id-badge"></i>
                     ID: #{{ str_pad(auth('user')->user()->id ?? '000', 3, '0', STR_PAD_LEFT) }}
                 </div>
-               
-            </div>
-             <div class="user-email">
+                
+                <div class="user-email">
                     <i class="fas fa-envelope"></i>
-                    {{ auth('user')->user()->email ?? 'user@example.com' }}
+                    <span class="email-text">{{ auth('user')->user()->email ?? 'user@example.com' }}</span>
                 </div>
+            </div>
         </div>
         
 
@@ -287,20 +287,27 @@
     background: rgba(59, 130, 246, 0.2);
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.5rem;
     border: 1px solid rgba(59, 130, 246, 0.3);
-    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     max-width: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
-    margin:auto;
 }
 
 .user-email i {
     font-size: 0.75rem;
     flex-shrink: 0;
+    color: rgba(59, 130, 246, 0.8);
+}
+
+.email-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
 }
 
 .user-id {

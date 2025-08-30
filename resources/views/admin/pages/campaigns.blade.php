@@ -117,6 +117,34 @@
                 </span>
             </div>
 
+            <!-- Additional Info -->
+            @if($campaign->budget)
+            <div class="d-flex justify-content-between align-items-center p-2 rounded bg-blue-500 bg-opacity-25">
+                <span class="fw-bold text-blue-300">
+                    <i class="fas fa-rupee-sign me-1"></i>
+                    Budget: ₹{{ number_format($campaign->budget, 2) }}
+                </span>
+            </div>
+            @endif
+
+            @if($campaign->status)
+            <div class="d-flex justify-content-between align-items-center p-2 rounded bg-slate-700/50">
+                <span class="small text-slate-300">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Status: {{ ucfirst($campaign->status) }}
+                </span>
+            </div>
+            @endif
+
+            @if($campaign->target_audience)
+            <div class="p-2 rounded bg-purple-500 bg-opacity-25">
+                <span class="small text-purple-200">
+                    <i class="fas fa-bullseye me-1"></i>
+                    Target: {{ Str::limit($campaign->target_audience, 50) }}
+                </span>
+            </div>
+            @endif
+
             <!-- Buttons -->
             <div class="d-flex justify-content-between gap-2 pt-2">
     <a href="{{ route('campaigns.show', $campaign->id) }}" class="btn btn-outline-light btn-sm flex-grow-1">
@@ -139,6 +167,202 @@
             <h3 class="text-xl font-medium mb-2">No campaigns found</h3>
             <p>Try adjusting your search criteria</p>
         </div>
+    </div>
+</div>
+
+<!-- Campaign Modal -->
+<div id="campaignModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[9999]">
+    <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="modalTitle" class="text-2xl font-bold text-white">Add New Campaign</h2>
+            <button id="cancelModalBtn" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="campaignForm" class="space-y-6">
+            @csrf
+            <input type="hidden" id="campaignId" name="id">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="campaignTitle" class="block text-sm font-medium text-gray-300 mb-2">Campaign Title</label>
+                    <input type="text" id="campaignTitle" name="title" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="campaignLocation" class="block text-sm font-medium text-gray-300 mb-2">Location</label>
+                    <input type="text" id="campaignLocation" name="location" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="campaignStartDate" class="block text-sm font-medium text-gray-300 mb-2">Start Date</label>
+                    <input type="date" id="campaignStartDate" name="start_date" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="campaignEndDate" class="block text-sm font-medium text-gray-300 mb-2">End Date</label>
+                    <input type="date" id="campaignEndDate" name="end_date" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="campaignType" class="block text-sm font-medium text-gray-300 mb-2">Campaign Type</label>
+                    <select id="campaignType" name="type" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="">Select Type</option>
+                        <option value="free">Free Camp</option>
+                        <option value="paid">Paid Camp</option>
+                    </select>
+                </div>
+
+                <div class="hidden">
+                    <label for="campaignAmount" class="block text-sm font-medium text-gray-300 mb-2">Amount (₹)</label>
+                    <input type="number" id="campaignAmount" name="amount" min="0" step="0.01"
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="expectedPatients" class="block text-sm font-medium text-gray-300 mb-2">Expected Patients</label>
+                    <input type="number" id="expectedPatients" name="expected_patients" min="1" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="doctorId" class="block text-sm font-medium text-gray-300 mb-2">Assign Doctor</label>
+                    <select id="doctorId" name="doctor_id" required
+                        class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="">Select Doctor</option>
+                        @foreach($doctors ?? [] as $doctor)
+                            <option value="{{ $doctor->id }}">{{ $doctor->doctor_name }} - {{ $doctor->specialty_name ?? 'General' }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label for="campaignDescription" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <textarea id="campaignDescription" name="description" rows="4" required
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+            </div>
+
+            <!-- New Fields -->
+            <div>
+                <label for="campaignBudget" class="block text-sm font-medium text-gray-300 mb-2">Budget (₹)</label>
+                <input type="number" id="campaignBudget" name="budget" min="0" step="0.01"
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            </div>
+
+            <div>
+                <label for="targetAudience" class="block text-sm font-medium text-gray-300 mb-2">Target Audience</label>
+                <textarea id="targetAudience" name="target_audience" rows="2"
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="Describe the target audience for this campaign"></textarea>
+            </div>
+
+            <div>
+                <label for="campaignRequirements" class="block text-sm font-medium text-gray-300 mb-2">Requirements</label>
+                <textarea id="campaignRequirements" name="requirements" rows="3"
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="List any specific requirements for this campaign"></textarea>
+            </div>
+
+            <div>
+                <label for="campaignStatus" class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                <select id="campaignStatus" name="status"
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <option value="draft">Draft</option>
+                    <option value="active" selected>Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end gap-4">
+                <button type="button" id="cancelModalBtn" 
+                    class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="submitBtn"
+                    class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    Add Campaign
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Patient Registration Modal -->
+<div id="patientRegistrationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[9998]">
+    <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl font-bold text-white">Register for Campaign</h2>
+            <button id="cancelPatientModalBtn" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="patientRegistrationForm" class="space-y-4">
+            @csrf
+            <input type="hidden" id="modalCampaignId" name="campaign_id">
+
+            <div>
+                <label for="patientName" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                <input type="text" id="patientName" name="name" required
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div>
+                <label for="patientPhone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+                <input type="tel" id="patientPhone" name="phone" required
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div>
+                <label for="patientAge" class="block text-sm font-medium text-gray-300 mb-2">Age</label>
+                <input type="number" id="patientAge" name="age" min="1" max="120" required
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div>
+                <label for="patientGender" class="block text-sm font-medium text-gray-300 mb-2">Gender</label>
+                <select id="patientGender" name="gender" required
+                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3">
+                <button type="button" id="cancelPatientModalBtn" 
+                    class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    Cancel
+                </button>
+                <button type="button" id="proceedToPaymentBtn"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    Register
+                </button>
+            </div>
+
+            <!-- Payment Section (Hidden by default) -->
+            <div id="paymentModalSection" class="hidden mt-4 pt-4 border-t border-slate-600">
+                <h3 class="text-lg font-medium text-white mb-3">Payment Details</h3>
+                <div class="bg-slate-700 p-4 rounded-lg mb-4">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-gray-300">Campaign Fee:</span>
+                        <span class="text-white font-bold" id="campaignFeeDisplay">₹0</span>
+                    </div>
+                </div>
+                <button type="button" id="proceedToRazorpayBtn"
+                    class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-credit-card me-2"></i>Pay Now
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -169,11 +393,13 @@
             }
             
             $('#campaignId').val('');
-            modal.removeClass('hidden');
+            modal.removeClass('hidden').addClass('flex');
+            modal.css('display', 'flex');
         });
 
         $('#cancelModalBtn').on('click', function() {
-            modal.addClass('hidden');
+            modal.addClass('hidden').removeClass('flex');
+            modal.css('display', 'none');
         });
 
         campaignForm.on('submit', function(e) {
@@ -596,7 +822,8 @@
 
         modal.on('click', function(e) {
             if (e.target === this) {
-                modal.addClass('hidden');
+                modal.addClass('hidden').removeClass('flex');
+                modal.css('display', 'none');
             }
         });
 

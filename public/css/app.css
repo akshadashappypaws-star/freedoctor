@@ -151,6 +151,20 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+/* Global modal z-index override - ensures all modals appear above navigation */
+.fixed[id*="Modal"], .fixed[id*="modal"], div[id*="Modal"], div[id*="modal"] {
+    z-index: 9999 !important;
+}
+
+/* Higher priority for specific modal IDs */
+#campaignModal, #patientRegistrationModal, #applicationModal, #businessRequestModal,
+#sponsorDetailModal, #processModal, #addModal, #patientDetailModal, #doctorModal,
+#processDoctorModal, #leadModal, #newMessageModal, #smartRecipientsModal,
+#analyticsModal, #linkModal, #testMachineModal, #addConfigModal, #viewPaymentModal,
+#viewApplicationModal, #campaignRegistrationModal {
+    z-index: 9999 !important;
+}
+
 /* Responsive utilities */
 @media (max-width: 768px) {
     .table-responsive {

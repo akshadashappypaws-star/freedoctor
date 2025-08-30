@@ -1,0 +1,95 @@
+# VPS Deployment Commands - Execute These Manually
+# Connect to your VPS: ssh root@72.60.96.205
+
+# 1. Navigate to freedoctor directory
+cd /root/freedoctor
+
+# 2. List files to confirm upload
+ls -la
+
+# 3. Set permissions
+chmod -R 755 .
+chmod -R 777 storage/
+chmod -R 777 bootstrap/cache/
+
+# 4. Install dependencies
+composer install --no-dev --optimize-autoloader
+
+# 5. Copy environment file
+cp .env.example .env
+
+# 6. Edit .env file for database
+nano .env
+
+# Update these lines in .env:
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=freedoctor
+# DB_USERNAME=root
+# DB_PASSWORD=Radha@202411
+
+# 7. Generate application key
+php artisan key:generate
+
+# 8. Drop and recreate database
+mysql -u root -p'Radha@202411' -e "DROP DATABASE IF EXISTS freedoctor;"
+mysql -u root -p'Radha@202411' -e "CREATE DATABASE freedoctor CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 9. Run migrations
+php artisan migrate:fresh --force
+
+# 10. Create admin user
+php artisan tinker
+
+# Inside tinker, run:
+$admin = new \App\Models\User();
+$admin->name = 'Admin';
+$admin->email = 'admin@gmail.com';
+$admin->password = bcrypt('00000000');
+$admin->email_verified_at = now();
+$admin->save();
+exit
+
+# 11. Create WhatsApp templates
+php artisan tinker
+
+# Inside tinker, run:
+$template1 = new \App\Models\WhatsappTemplate();
+$template1->name = 'welcome_message';
+$template1->language = 'en_US';
+$template1->category = 'UTILITY';
+$template1->status = 'APPROVED';
+$template1->components = json_encode([['type' => 'BODY', 'text' => 'Welcome to FreeDoctor! We are here to help you with your healthcare needs.']]);
+$template1->save();
+
+$template2 = new \App\Models\WhatsappTemplate();
+$template2->name = 'appointment_reminder';
+$template2->language = 'en_US';
+$template2->category = 'UTILITY';
+$template2->status = 'APPROVED';
+$template2->components = json_encode([['type' => 'BODY', 'text' => 'Hi {{1}}, your appointment with Dr. {{2}} is scheduled for {{3}}. Please confirm your attendance.']]);
+$template2->save();
+exit
+
+# 12. Clear caches
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+# 13. Cache for production
+php artisan config:cache
+php artisan route:cache
+
+# 14. Set final permissions
+chown -R www-data:www-data .
+chmod -R 755 .
+chmod -R 777 storage/
+chmod -R 777 bootstrap/cache/
+
+# 15. Test installation
+php artisan --version
+
+echo "Deployment completed! Access your site at your domain/admin"
+echo "Login: admin@gmail.com / 00000000"

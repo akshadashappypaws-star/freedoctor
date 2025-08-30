@@ -4653,11 +4653,11 @@ function createLocationAwareCampaignCardHtml(campaign) {
 
                        <button
   onclick="shareEnhancedCampaign(
-    {{ json_encode($campaign->id) }},
-    {{ json_encode($campaignUrl) }},
-    {{ json_encode($campaign->title) }},
-    {{ json_encode($campaign->description) }},
-    {{ json_encode($campaign->thumbnail ? asset('storage/' . $campaign->thumbnail) : '') }}
+    '${campaign.id}',
+    '${window.location.origin}/user/campaigns/${campaign.id}',
+    '${campaign.title}',
+    '${campaign.description || ''}',
+    '${campaign.thumbnail || ''}'
   )"
   class="btn-action btn-share-full"
 >
@@ -4845,11 +4845,11 @@ function createCampaignCardHtml(campaign) {
 
                       <button
   onclick="shareEnhancedCampaign(
-    {{ json_encode($campaign->id) }},
-    {{ json_encode($campaignUrl) }},
-    {{ json_encode($campaign->title) }},
-    {{ json_encode($campaign->description) }},
-    {{ json_encode($campaign->thumbnail ? asset('storage/' . $campaign->thumbnail) : '') }}
+    '${campaign.id}',
+    '${window.location.origin}/user/campaigns/${campaign.id}',
+    '${campaign.title}',
+    '${campaign.description || ''}',
+    '${campaign.thumbnail || ''}'
   )"
   class="btn-action btn-share-full"
 >

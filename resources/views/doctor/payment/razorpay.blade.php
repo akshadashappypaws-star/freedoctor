@@ -3,75 +3,88 @@
 @section('title', 'Complete Payment')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
-    <div class="max-w-lg w-full">
-        <!-- Payment Processing Card -->
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-4">
-                    <i class="fas fa-credit-card text-2xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold">Complete Payment</h1>
-                <p class="text-green-100">Secure payment with Razorpay</p>
-            </div>
+<!-- Back Arrow Button -->
+<div class="back-arrow-container">
+    <a href="{{ route('doctor.payment.form', $doctor->id) }}" class="back-arrow-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+        </svg>
+        Back to Payment
+    </a>
+</div>
 
-            <!-- Payment Details -->
-            <div class="p-6">
-                <div class="text-center mb-6">
-                    <p class="text-gray-600 mb-2">Amount to Pay</p>
-                    <div class="text-3xl font-bold text-green-600">₹{{ number_format($payment->amount, 2) }}</div>
-                    <p class="text-sm text-gray-500">{{ $payment->description }}</p>
-                </div>
-
-                <!-- Doctor Info -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                    <h3 class="font-semibold text-gray-800 mb-2">Doctor Details</h3>
-                    <p class="text-gray-600">{{ $doctor->doctor_name }}</p>
-                    <p class="text-gray-500 text-sm">{{ $doctor->email }}</p>
-                </div>
-
-                <!-- Payment Button -->
-                <button id="rzp-button" 
-                        class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-shield-alt mr-2"></i>
-                    Pay with Razorpay
-                </button>
-
-                <!-- Loading State -->
-                <div id="loading" class="hidden text-center py-4">
-                    <div class="inline-flex items-center">
-                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Processing payment...
-                    </div>
-                </div>
-
-                <!-- Security Info -->
-                <div class="mt-6 text-center">
-                    <div class="flex items-center justify-center space-x-4 text-gray-500 text-sm">
-                        <div class="flex items-center">
-                            <i class="fas fa-lock mr-1"></i>
-                            <span>256-bit SSL</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            <span>PCI Compliant</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Back Link -->
-        <div class="mt-6 text-center">
-            <a href="{{ route('doctor.register') }}" class="text-gray-300 hover:text-white text-sm">
-                <i class="fas fa-arrow-left mr-1"></i> Back to Registration
-            </a>
+<div class="login-card" role="main" aria-label="Payment Processing">
+    <!-- Logo Section -->
+    <div class="logo-section" style="text-align: center; margin-bottom: 25px;">
+        <img src="{{ asset('storage/PngVectordeisgn.png') }}" alt="FreeDoctor Logo" style="height: 70px; width: auto; margin-bottom: 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));" />
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <h2 style="color: #667eea; margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                FreeDoctor
+            </h2>
         </div>
     </div>
+    
+    <h1 class="title">Complete Payment</h1>
+    <p class="subtitle">Secure payment with Razorpay</p>
+
+    <div class="tabs" role="tablist" aria-label="Payment Processing">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="payment-panel" id="payment-tab" tabindex="0">Payment Gateway</button>
+    </div>
+
+    <!-- Amount Display -->
+    <div style="background: linear-gradient(135deg, #e8f5e8, #f0f8f0); border-radius: 8px; padding: 25px; text-align: center; margin-bottom: 25px; border: 1px solid #d4edda;">
+        <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">Amount to Pay</p>
+        <div style="font-size: 32px; font-weight: bold; color: #28a745; margin-bottom: 8px;">₹{{ number_format($payment->amount, 2) }}</div>
+        <p style="margin: 0; font-size: 13px; color: #666;">{{ $payment->description }}</p>
+    </div>
+
+    <!-- Doctor Info -->
+    <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 20px; margin-bottom: 25px; color: white;">
+        <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600;">Doctor Details</h3>
+        <p style="margin: 0 0 5px 0; font-size: 15px; font-weight: 500;">{{ $doctor->doctor_name }}</p>
+        <p style="margin: 0; opacity: 0.9; font-size: 13px;">{{ $doctor->email }}</p>
+    </div>
+
+    <!-- Payment Button -->
+    <div class="row">
+        <div class="col-12">
+            <button id="rzp-button" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #28a745, #20c997); border: none; padding: 15px; font-weight: 600; font-size: 16px; position: relative;">
+                <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>
+                Pay with Razorpay
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="hidden" style="text-align: center; margin-top: 20px;">
+        <div style="display: inline-flex; align-items: center; color: #666;">
+            <svg class="animate-spin" style="width: 20px; height: 20px; margin-right: 8px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing payment...
+        </div>
+    </div>
+
+    <!-- Security Info -->
+    <div style="text-align: center; margin-top: 25px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; color: #666; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-lock"></i>
+                <span>256-bit SSL</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-shield-alt"></i>
+                <span>PCI Compliant</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Link -->
+    <p style="text-align: center; margin-top: 25px; font-size: 13px; color: #666;">
+        Need help? <a href="mailto:support@freedoctor.com" style="color: #667eea;">Contact Support</a>
+    </p>
 </div>
 
 <!-- Razorpay Integration -->
@@ -85,26 +98,23 @@ document.getElementById('rzp-button').onclick = function(e) {
     document.getElementById('loading').classList.remove('hidden');
     
     var options = {
-        "key": "{{ env('RAZORPAY_KEY_ID', 'rzp_test_1234567890') }}", // Your Razorpay Key ID
-        "amount": {{ $payment->amount * 100 }}, // Amount in paisa
+        "key": "{{ env('RAZORPAY_KEY_ID') }}", 
+        "amount": {{ $payment->amount * 100 }}, 
         "currency": "INR",
         "name": "FreeDoctor",
         "description": "{{ $payment->description }}",
         "order_id": "{{ $payment->order_id }}",
         "handler": function (response) {
-            // Payment successful
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route("doctor.payment.success", $payment->id) }}';
             
-            // Add CSRF token
             var csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = '{{ csrf_token() }}';
             form.appendChild(csrfToken);
             
-            // Add payment details
             var paymentId = document.createElement('input');
             paymentId.type = 'hidden';
             paymentId.name = 'razorpay_payment_id';
@@ -128,9 +138,17 @@ document.getElementById('rzp-button').onclick = function(e) {
         },
         "modal": {
             "ondismiss": function() {
-                // Payment cancelled
                 document.getElementById('rzp-button').style.display = 'block';
                 document.getElementById('loading').classList.add('hidden');
+                
+                // Show message that user can try again
+                if (confirm('Payment was cancelled. Would you like to try again?')) {
+                    // User wants to try again, keep them on the page
+                    return;
+                } else {
+                    // User wants to go back to payment form
+                    window.location.href = '{{ route("doctor.payment.form", $doctor->id) }}';
+                }
             }
         },
         "prefill": {
@@ -139,11 +157,43 @@ document.getElementById('rzp-button').onclick = function(e) {
             "contact": "{{ $doctor->phone ?? '' }}"
         },
         "theme": {
-            "color": "#10B981"
+            "color": "#667eea"
         }
     };
     
     var rzp = new Razorpay(options);
+    
+    // Add error handling
+    rzp.on('payment.failed', function (response) {
+        console.error('Payment failed:', response.error);
+        
+        // Create form to submit failure data
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("doctor.payment.failure", $payment->id) }}';
+        
+        var csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+        
+        var errorCode = document.createElement('input');
+        errorCode.type = 'hidden';
+        errorCode.name = 'error_code';
+        errorCode.value = response.error.code;
+        form.appendChild(errorCode);
+        
+        var errorDescription = document.createElement('input');
+        errorDescription.type = 'hidden';
+        errorDescription.name = 'error_description';
+        errorDescription.value = response.error.description;
+        form.appendChild(errorDescription);
+        
+        document.body.appendChild(form);
+        form.submit();
+    });
+    
     rzp.open();
 };
 </script>

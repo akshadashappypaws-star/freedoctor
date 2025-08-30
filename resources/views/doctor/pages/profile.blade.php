@@ -1374,7 +1374,7 @@
         </div>
         </div>
         
-        <form id="passwordForm" action="{{ route('doctor.password.update') }}" method="POST">
+        <form id="passwordForm" action="{{ route('doctor.profile.password.update') }}" method="POST">
             @csrf
             @method('PUT')
             

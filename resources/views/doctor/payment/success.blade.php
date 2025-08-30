@@ -3,156 +3,160 @@
 @section('title', 'Payment Successful')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-green-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full">
-        <!-- Success Animation -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-24 h-24 bg-green-500 rounded-full mb-6 animate-pulse">
-                <i class="fas fa-check text-4xl text-white"></i>
-            </div>
-            <h1 class="text-4xl font-bold text-white mb-2">Payment Successful!</h1>
-            <p class="text-gray-300 text-lg">Your doctor registration has been processed</p>
+<div class="login-card" role="main" aria-label="Payment Success" style="max-width: 600px;">
+    <!-- Logo Section -->
+    <div class="logo-section" style="text-align: center; margin-bottom: 25px;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: linear-gradient(135deg, #28a745, #20c997); border-radius: 50%; margin-bottom: 15px; animation: pulse 2s infinite;">
+            <i class="fas fa-check" style="color: white; font-size: 32px;"></i>
         </div>
+        <img src="{{ asset('storage/PngVectordeisgn.png') }}" alt="FreeDoctor Logo" style="height: 50px; width: auto; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));" />
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <h2 style="color: #667eea; margin: 0; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                FreeDoctor
+            </h2>
+        </div>
+    </div>
+    
+    <h1 class="title" style="color: #28a745;">Payment Successful!</h1>
+    <p class="subtitle">Your doctor registration has been processed</p>
 
-        <!-- Success Card -->
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold">Registration Complete</h2>
-                        <p class="text-green-100">Welcome to FreeDoctor Platform</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-green-100 text-sm">Payment ID</p>
-                        <p class="text-white font-mono text-sm">{{ $payment->payment_id ?? 'Processing...' }}</p>
-                    </div>
+    <div class="tabs" role="tablist" aria-label="Payment Confirmation">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="success-panel" id="success-tab" tabindex="0" style="background: linear-gradient(135deg, #28a745, #20c997); border: none;">Payment Complete</button>
+    </div>
+
+    <!-- Payment Summary -->
+    <div style="background: linear-gradient(135deg, #e8f5e8, #f0f8f0); border-radius: 8px; padding: 20px; margin-bottom: 25px; border: 1px solid #d4edda;">
+        <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #333;">Payment Summary</h3>
+        
+        <div style="display: grid; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #d4edda;">
+                <span style="color: #666; font-size: 14px;">Amount Paid</span>
+                <span style="font-weight: 600; color: #28a745; font-size: 16px;">₹{{ number_format($payment->amount, 2) }}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #d4edda;">
+                <span style="color: #666; font-size: 14px;">Payment Date</span>
+                <span style="font-weight: 500; font-size: 14px;">{{ $payment->payment_date ? $payment->payment_date->format('M d, Y H:i') : 'Just now' }}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #d4edda;">
+                <span style="color: #666; font-size: 14px;">Status</span>
+                <span style="display: inline-flex; align-items: center; padding: 4px 12px; background: #d4edda; color: #155724; border-radius: 15px; font-size: 12px; font-weight: 500;">
+                    <i class="fas fa-check-circle" style="margin-right: 4px;"></i>
+                    {{ ucfirst($payment->payment_status) }}
+                </span>
+            </div>
+            
+            @if($payment->payment_id)
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #d4edda;">
+                <span style="color: #666; font-size: 14px;">Payment ID</span>
+                <span style="font-weight: 500; font-size: 12px; font-family: monospace;">{{ $payment->payment_id }}</span>
+            </div>
+            @endif
+            
+            @if($payment->receipt_number)
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #666; font-size: 14px;">Receipt Number</span>
+                <span style="font-weight: 500; font-size: 14px;">{{ $payment->receipt_number }}</span>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div style="margin-bottom: 25px;">
+        <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #333;">What's Next?</h3>
+        
+        <div style="display: grid; gap: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 24px; height: 24px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">1</div>
+                <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #333;">Admin Review</h4>
+                    <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.4;">Our team will review your profile and payment within 24 hours</p>
                 </div>
             </div>
-
-            <!-- Payment Details -->
-            <div class="p-8">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Payment Summary -->
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Summary</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600">Amount Paid</span>
-                                <span class="font-semibold text-green-600">₹{{ number_format($payment->amount, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600">Payment Date</span>
-                                <span class="font-semibold">{{ $payment->payment_date ? $payment->payment_date->format('M d, Y H:i') : 'Just now' }}</span>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600">Status</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <i class="fas fa-check-circle mr-1"></i>
-                                    {{ ucfirst($payment->payment_status) }}
-                                </span>
-                            </div>
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Receipt Number</span>
-                                <span class="font-semibold">{{ $payment->receipt_number }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Next Steps -->
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">What's Next?</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <span class="text-blue-600 font-bold text-sm">1</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Admin Review</h4>
-                                    <p class="text-gray-600 text-sm">Our team will review your profile and payment within 24 hours</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <span class="text-blue-600 font-bold text-sm">2</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Account Activation</h4>
-                                    <p class="text-gray-600 text-sm">You'll receive an email once your account is approved</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <span class="text-blue-600 font-bold text-sm">3</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Start Creating Camps</h4>
-                                    <p class="text-gray-600 text-sm">Access your dashboard and begin organizing medical camps</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Email Notification -->
-                        <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <div class="flex items-center">
-                                <i class="fas fa-envelope text-blue-600 mr-2"></i>
-                                <span class="text-blue-800 text-sm font-medium">Confirmation email sent to {{ $payment->doctor->email }}</span>
-                            </div>
-                        </div>
-                    </div>
+            
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 24px; height: 24px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">2</div>
+                <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #333;">Account Activation</h4>
+                    <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.4;">You'll receive an email once your account is approved</p>
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                    <a href="{{ route('doctor.login') }}" 
-                       class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>
-                        Go to Login
-                    </a>
-                    
-                    <button onclick="window.print()" 
-                            class="flex-1 bg-gray-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-700 transition-all duration-300">
-                        <i class="fas fa-print mr-2"></i>
-                        Print Receipt
-                    </button>
+            </div>
+            
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 24px; height: 24px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">3</div>
+                <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #333;">Start Creating Camps</h4>
+                    <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.4;">Access your dashboard and begin organizing medical camps</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Support Info -->
-        <div class="mt-8 text-center">
-            <p class="text-gray-300 text-sm mb-2">
-                Need help? Contact our support team
-            </p>
-            <div class="flex items-center justify-center space-x-6 text-gray-400 text-sm">
-                <a href="mailto:support@freedoctor.com" class="hover:text-white">
-                    <i class="fas fa-envelope mr-1"></i>
-                    support@freedoctor.com
-                </a>
-                <a href="tel:+911234567890" class="hover:text-white">
-                    <i class="fas fa-phone mr-1"></i>
-                    +91 12345 67890
-                </a>
-            </div>
+    <!-- Email Notification -->
+    <div style="background: linear-gradient(135deg, #e3f2fd, #f0f8ff); border: 1px solid #bbdefb; border-radius: 8px; padding: 15px; margin-bottom: 25px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-envelope" style="color: #1976d2; font-size: 16px;"></i>
+            <span style="color: #1976d2; font-size: 14px; font-weight: 500;">Confirmation email sent to {{ $payment->doctor->email }}</span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-6">
+            <a href="{{ route('doctor.login') }}" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; padding: 12px; font-weight: 600;">
+                <i class="fas fa-sign-in-alt" style="margin-right: 6px;"></i>
+                Go to Login
+            </a>
+        </div>
+        <div class="col-6">
+            <button onclick="window.print()" class="btn btn-secondary btn-block" style="padding: 12px; font-weight: 500;">
+                <i class="fas fa-print" style="margin-right: 6px;"></i>
+                Print Receipt
+            </button>
+        </div>
+    </div>
+
+    <!-- Support Info -->
+    <div style="text-align: center;">
+        <p style="margin: 0 0 10px 0; font-size: 13px; color: #666;">
+            Need help? Contact our support team
+        </p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 12px;">
+            <a href="mailto:support@freedoctor.com" style="color: #667eea; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-envelope"></i>
+                support@freedoctor.com
+            </a>
+            <a href="tel:+911234567890" style="color: #667eea; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-phone"></i>
+                +91 12345 67890
+            </a>
         </div>
     </div>
 </div>
 
 <style>
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
 @media print {
     body * {
         visibility: hidden;
     }
-    .bg-white, .bg-white * {
+    .login-card, .login-card * {
         visibility: visible;
     }
-    .bg-white {
+    .login-card {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        box-shadow: none;
+        margin: 0;
+        padding: 20px;
     }
 }
 </style>

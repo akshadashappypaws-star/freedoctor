@@ -40,6 +40,10 @@ class CampaignController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|min:10',
+            'budget' => 'nullable|numeric|min:0',
+            'target_audience' => 'nullable|string|max:500',
+            'requirements' => 'nullable|string|max:1000',
+            'status' => 'nullable|string|in:active,inactive,draft',
             'location' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
